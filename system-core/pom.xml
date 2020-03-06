@@ -23,6 +23,13 @@
             <artifactId>business</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <!--    SQL打印分析    -->
+        <!-- https://mvnrepository.com/artifact/p6spy/p6spy -->
+        <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
+            <version>3.8.7</version>
+        </dependency>
     </dependencies>
 
     <build>
