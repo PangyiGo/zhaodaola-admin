@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableTransactionManagement
-@MapperScan(basePackages = {"com.sise.zhaodaola.business.mapper"})
 @ComponentScan(basePackages = "com.sise.zhaodaola.**")
 public class ApplicationRun {
 

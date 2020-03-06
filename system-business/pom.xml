@@ -13,6 +13,11 @@
     <description>Demo project for Spring Boot</description>
 
     <dependencies>
+        <dependency>
+          <groupId>com.sise.zhaodaola</groupId>
+            <artifactId>tools</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

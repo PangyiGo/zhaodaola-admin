@@ -20,6 +20,7 @@
     <modules>
         <module>system-business</module>
         <module>system-core</module>
+        <module>system-tools</module>
     </modules>
 
     <properties>
