@@ -43,6 +43,8 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     cache-enabled: false
   type-aliases-package: com.sise.zhaodaola.business.entity
+  global-config:
+    banner: false
 
 # Logger Config
 logging:

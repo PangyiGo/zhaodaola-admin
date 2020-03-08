@@ -6,8 +6,10 @@ import com.sise.zhaodaola.core.security.security.TokenProvider;
 import com.sise.zhaodaola.core.security.security.vo.AuthUser;
 import com.sise.zhaodaola.core.security.security.vo.JwtUser;
 import com.sise.zhaodaola.tool.annotation.AnonymousAccess;
+import com.sise.zhaodaola.tool.annotation.Log;
 import com.sise.zhaodaola.tool.exception.BadRequestException;
 import com.sise.zhaodaola.tool.utils.RedisUtils;
+import com.sise.zhaodaola.tool.utils.SecurityUtils;
 import com.sise.zhaodaola.tool.utils.StringUtils;
 import com.wf.captcha.ArithmeticCaptcha;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,15 +44,18 @@ public class AuthController {
     private SpringSecurityProperities properities;
     private AuthenticationManagerBuilder authenticationManagerBuilder;
     private TokenProvider tokenProvider;
+    private UserDetailsService userDetailsService;
 
     public AuthController(RedisUtils redisUtils,
                           SpringSecurityProperities properities,
                           AuthenticationManagerBuilder authenticationManagerBuilder,
-                          TokenProvider tokenProvider) {
+                          TokenProvider tokenProvider,
+                          UserDetailsService userDetailsService) {
         this.redisUtils = redisUtils;
         this.properities = properities;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.tokenProvider = tokenProvider;
+        this.userDetailsService = userDetailsService;
     }
 
     /**
@@ -58,6 +65,7 @@ public class AuthController {
      * @param request  /
      * @return /
      */
+    @Log("用户登录")
     @AnonymousAccess
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody AuthUser authUser, HttpServletRequest request) {
@@ -112,5 +120,16 @@ public class AuthController {
             put("uuid", uuid);
         }};
         return ResponseEntity.ok(imgResult);
+    }
+
+    /**
+     * 获取用户信息
+     *
+     * @return /
+     */
+    @PostMapping(value = "/info")
+    public ResponseEntity<Object> getUserInfo() {
+        JwtUser jwtUser = (JwtUser) userDetailsService.loadUserByUsername(SecurityUtils.getUsername());
+        return ResponseEntity.ok(jwtUser);
     }
 }

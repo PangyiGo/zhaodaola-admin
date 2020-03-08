@@ -44,11 +44,16 @@ public class Log extends Model<Log> implements Serializable {
 
     private String requestIp;
 
-    private int time;
+    private Long time;
 
     private String username;
 
     private String address;
 
-    private String brower;
+    private String browser;
+
+    public Log(String logType, Long time) {
+        this.logType = logType;
+        this.time = time;
+    }
 }

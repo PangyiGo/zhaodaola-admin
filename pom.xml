@@ -28,6 +28,11 @@
     </properties>
 
     <dependencies>
+        <!--    系统AOP    -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
         <!--    缓存    -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
