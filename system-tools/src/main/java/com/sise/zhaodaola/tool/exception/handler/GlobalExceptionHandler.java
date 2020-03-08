@@ -1,6 +1,8 @@
 package com.sise.zhaodaola.tool.exception.handler;
 
 import com.sise.zhaodaola.tool.exception.BadRequestException;
+import com.sise.zhaodaola.tool.exception.EntityExistException;
+import com.sise.zhaodaola.tool.exception.EntityNotFoundException;
 import com.sise.zhaodaola.tool.utils.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Objects;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * @Author: PangYi
@@ -50,6 +54,26 @@ public class GlobalExceptionHandler {
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
         return buildResponseEntity(ApiError.error(e.getStatus(),e.getMessage()));
+    }
+
+    /**
+     * 处理 EntityExist
+     */
+    @ExceptionHandler(value = EntityExistException.class)
+    public ResponseEntity<ApiError> entityExistException(EntityExistException e) {
+        // 打印堆栈信息
+        log.error(ThrowableUtil.getStackTrace(e));
+        return buildResponseEntity(ApiError.error(e.getMessage()));
+    }
+
+    /**
+     * 处理 EntityNotFound
+     */
+    @ExceptionHandler(value = EntityNotFoundException.class)
+    public ResponseEntity<ApiError> entityNotFoundException(EntityNotFoundException e) {
+        // 打印堆栈信息
+        log.error(ThrowableUtil.getStackTrace(e));
+        return buildResponseEntity(ApiError.error(NOT_FOUND.value(),e.getMessage()));
     }
 
     /**

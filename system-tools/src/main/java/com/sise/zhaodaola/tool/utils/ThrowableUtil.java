@@ -4,8 +4,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 /**
- * 异常工具 2019-01-06
- * @author Zheng Jie
+ * @Author: PangYi
+ * @Date 2020/3/712:51 上午
+ * 异常工具类
  */
 public class ThrowableUtil {
 
