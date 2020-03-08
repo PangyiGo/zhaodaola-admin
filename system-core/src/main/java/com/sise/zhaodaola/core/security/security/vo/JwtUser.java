@@ -78,6 +78,7 @@ public class JwtUser implements UserDetails {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return status;
