@@ -31,7 +31,7 @@ public class Menu extends Model<Menu> implements Serializable {
 
     private String title;
 
-    private String key;
+    private String name;
 
     private String icon;
 
