@@ -107,7 +107,7 @@ public class AuthController {
     @PostMapping(value = "/code")
     public ResponseEntity<Object> getCode() {
         // 算术类型 https://gitee.com/whvse/EasyCaptcha
-        ArithmeticCaptcha captcha = new ArithmeticCaptcha(111, 36);
+        ArithmeticCaptcha captcha = new ArithmeticCaptcha(111, 38);
         // 几位数运算，默认是两位
         captcha.setLen(2);
         // 获取运算的结果
