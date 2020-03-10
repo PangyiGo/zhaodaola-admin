@@ -40,22 +40,20 @@ class CoreApplicationTests {
     void test01() {
         String username = "py1653@scse.com.cn";
         UserDto userDto = userSerivce.findByUsername(username);
-
         System.out.println(userDto);
     }
 
     @Test
     void test02() {
         Set<Menu> byRolesToMenus = roleMapper.findByRolesToMenus(1);
-        Set<Role> roles = roleMapper.findbyUserId(1);
+        Set<Role> roles = roleMapper.findByUserId(1);
         roles.forEach(System.out::println);
         byRolesToMenus.forEach(System.out::println);
     }
 
     @Test
     void test03() {
-        Collection<GrantedAuthority> authoritries = roleSerivce.mapToGrantedAuthoritries(2);
-
-        authoritries.forEach(a -> System.out.println(a.getAuthority()));
+        Collection<GrantedAuthority> authorization = roleSerivce.mapToGrantedAuthorization(2);
+        authorization.forEach(a -> System.out.println(a.getAuthority()));
     }
 }
