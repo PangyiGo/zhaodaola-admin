@@ -9,7 +9,6 @@ import com.sise.zhaodaola.business.entity.User;
 import com.sise.zhaodaola.business.mapper.UserMapper;
 import com.sise.zhaodaola.business.service.UserSerivce;
 import com.sise.zhaodaola.business.service.dto.UserDto;
-import com.sise.zhaodaola.tool.exception.EntityExistException;
 import com.sise.zhaodaola.tool.exception.EntityNotFoundException;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -34,7 +33,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery().eq(User::getUsername, username);
         user = super.getOne(wrapper, true);
         if (ObjectUtils.isEmpty(user))
-            throw new EntityNotFoundException(User.class, "uesrname", username);
+            throw new EntityNotFoundException(User.class, "username", username);
         UserDto userDto = new UserDto();
         BeanUtil.copyProperties(user, userDto);
         return userDto;
