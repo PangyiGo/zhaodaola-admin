@@ -1,7 +1,6 @@
 package com.sise.zhaodaola.business.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.sise.zhaodaola.business.entity.Announce;
 import com.sise.zhaodaola.business.entity.Role;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -19,5 +18,5 @@ public interface RoleSerivce extends IService<Role> {
      * @param uid 用户ID
      * @return /
      */
-    Collection<GrantedAuthority> mapToGrantedAuthoritries(Integer uid);
+    Collection<GrantedAuthority> mapToGrantedAuthorization(Integer uid);
 }

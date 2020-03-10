@@ -1,12 +1,9 @@
 package com.sise.zhaodaola.business.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sise.zhaodaola.business.entity.Announce;
 import com.sise.zhaodaola.business.entity.Menu;
 import com.sise.zhaodaola.business.entity.Role;
-import com.sise.zhaodaola.business.mapper.AnnounceMapper;
 import com.sise.zhaodaola.business.mapper.RoleMapper;
-import com.sise.zhaodaola.business.service.AnnounceSerivce;
 import com.sise.zhaodaola.business.service.RoleSerivce;
 import com.sise.zhaodaola.tool.utils.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
@@ -33,8 +30,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Cacheable(key = "'loadPermissionByUser'+#p0")
     @Override
-    public Collection<GrantedAuthority> mapToGrantedAuthoritries(Integer uid) {
-        Set<Role> roles = baseMapper.findbyUserId(uid);
+    public Collection<GrantedAuthority> mapToGrantedAuthorization(Integer uid) {
+        Set<Role> roles = baseMapper.findByUserId(uid);
         Set<String> permission = roles.stream().filter(role -> StringUtils.isNotBlank(role.getName())).map(Role::getName).collect(Collectors.toSet());
         Set<Menu> rolesToMenus = baseMapper.findByRolesToMenus(uid);
         permission.addAll(rolesToMenus.stream()

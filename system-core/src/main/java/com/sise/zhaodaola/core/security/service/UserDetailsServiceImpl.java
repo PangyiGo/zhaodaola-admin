@@ -7,7 +7,6 @@ import com.sise.zhaodaola.business.service.dto.UserDto;
 import com.sise.zhaodaola.core.security.security.vo.JwtUser;
 import com.sise.zhaodaola.tool.dict.DictManager;
 import com.sise.zhaodaola.tool.exception.BadRequestException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -41,7 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new BadRequestException("账号不存在");
         if (!DictManager.isEnable(userDto.getStatus()))
             throw new BadRequestException("账号不可用，请联系管理员");
-        Collection<GrantedAuthority> grantedAuthorities = roleSerivce.mapToGrantedAuthoritries(userDto.getId());
+        Collection<GrantedAuthority> grantedAuthorities = roleSerivce.mapToGrantedAuthorization(userDto.getId());
         return this.createJwtUser(userDto, grantedAuthorities);
     }
 
