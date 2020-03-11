@@ -13,8 +13,7 @@ public interface MenuService extends IService<Menu> {
 
     /**
      * 查询当前用户的菜单name值
-     * @param username 用户名
      * @return /
      */
-    Set<String> findMenusKeyByUsername(String username);
+    Set<String> findMenusKeyByUsername();
 }

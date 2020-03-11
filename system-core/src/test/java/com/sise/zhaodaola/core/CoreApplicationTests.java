@@ -31,7 +31,7 @@ class CoreApplicationTests {
 
     @Autowired
     private RoleService roleService;
-    
+
     @Autowired
     private MenuMapper menuMapper;
 
@@ -64,11 +64,10 @@ class CoreApplicationTests {
         Collection<GrantedAuthority> authorization = roleService.mapToGrantedAuthorization(2);
         authorization.forEach(a -> System.out.println(a.getAuthority()));
     }
-    
+
     @Test
     void test04(){
-        String username = "py1653@scse.com.cn";
-        Set<String> keyByUsername = menuService.findMenusKeyByUsername(username);
+        Set<String> keyByUsername = menuService.findMenusKeyByUsername();
         keyByUsername.forEach(System.out::println);
     }
 }

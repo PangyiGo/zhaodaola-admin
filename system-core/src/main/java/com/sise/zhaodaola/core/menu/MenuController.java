@@ -27,12 +27,12 @@ public class MenuController {
 
     /**
      * 查询用户的菜单name列表
+     *
      * @return /
      */
     @PostMapping("/names")
-    public ResponseEntity<Object> getMenuNameList(){
-        String username = SecurityUtils.getUsername();
-        Set<String> keyByUsername = menuService.findMenusKeyByUsername(username);
+    public ResponseEntity<Object> getMenuNameList() {
+        Set<String> keyByUsername = menuService.findMenusKeyByUsername();
         return ResponseEntity.ok(keyByUsername);
     }
 }
