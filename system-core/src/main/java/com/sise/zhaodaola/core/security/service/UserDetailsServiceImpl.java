@@ -1,8 +1,8 @@
 package com.sise.zhaodaola.core.security.service;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.sise.zhaodaola.business.service.RoleSerivce;
-import com.sise.zhaodaola.business.service.UserSerivce;
+import com.sise.zhaodaola.business.service.RoleService;
+import com.sise.zhaodaola.business.service.UserService;
 import com.sise.zhaodaola.business.service.dto.UserDto;
 import com.sise.zhaodaola.core.security.security.vo.JwtUser;
 import com.sise.zhaodaola.tool.dict.DictManager;
@@ -25,10 +25,10 @@ import java.util.Collection;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private UserSerivce userSerivce;
-    private RoleSerivce roleSerivce;
+    private UserService userSerivce;
+    private RoleService roleSerivce;
 
-    public UserDetailsServiceImpl(UserSerivce userSerivce, RoleSerivce roleSerivce) {
+    public UserDetailsServiceImpl(UserService userSerivce, RoleService roleSerivce) {
         this.userSerivce = userSerivce;
         this.roleSerivce = roleSerivce;
     }

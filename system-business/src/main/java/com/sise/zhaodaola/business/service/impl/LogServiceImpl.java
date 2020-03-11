@@ -2,12 +2,9 @@ package com.sise.zhaodaola.business.service.impl;
 
 import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sise.zhaodaola.business.entity.Announce;
 import com.sise.zhaodaola.business.entity.Log;
-import com.sise.zhaodaola.business.mapper.AnnounceMapper;
 import com.sise.zhaodaola.business.mapper.LogMapper;
-import com.sise.zhaodaola.business.service.AnnounceSerivce;
-import com.sise.zhaodaola.business.service.LogSerivce;
+import com.sise.zhaodaola.business.service.LogService;
 import com.sise.zhaodaola.tool.utils.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -24,7 +21,7 @@ import java.time.LocalDateTime;
  */
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSerivce {
+public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogService {
 
 
     @Transactional(rollbackFor = Exception.class)

@@ -2,9 +2,11 @@ package com.sise.zhaodaola.core;
 
 import com.sise.zhaodaola.business.entity.Menu;
 import com.sise.zhaodaola.business.entity.Role;
+import com.sise.zhaodaola.business.mapper.MenuMapper;
 import com.sise.zhaodaola.business.mapper.RoleMapper;
-import com.sise.zhaodaola.business.service.RoleSerivce;
-import com.sise.zhaodaola.business.service.UserSerivce;
+import com.sise.zhaodaola.business.service.MenuService;
+import com.sise.zhaodaola.business.service.RoleService;
+import com.sise.zhaodaola.business.service.UserService;
 import com.sise.zhaodaola.business.service.dto.UserDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +24,19 @@ class CoreApplicationTests {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserSerivce userSerivce;
+    private UserService userService;
 
     @Autowired
     private RoleMapper roleMapper;
 
     @Autowired
-    private RoleSerivce roleSerivce;
+    private RoleService roleService;
+    
+    @Autowired
+    private MenuMapper menuMapper;
+
+    @Autowired
+    private MenuService menuService;
 
     @Test
     void contextLoads() {
@@ -39,7 +47,7 @@ class CoreApplicationTests {
     @Test
     void test01() {
         String username = "py1653@scse.com.cn";
-        UserDto userDto = userSerivce.findByUsername(username);
+        UserDto userDto = userService.findByUsername(username);
         System.out.println(userDto);
     }
 
@@ -53,7 +61,14 @@ class CoreApplicationTests {
 
     @Test
     void test03() {
-        Collection<GrantedAuthority> authorization = roleSerivce.mapToGrantedAuthorization(2);
+        Collection<GrantedAuthority> authorization = roleService.mapToGrantedAuthorization(2);
         authorization.forEach(a -> System.out.println(a.getAuthority()));
+    }
+    
+    @Test
+    void test04(){
+        String username = "py1653@scse.com.cn";
+        Set<String> keyByUsername = menuService.findMenusKeyByUsername(username);
+        keyByUsername.forEach(System.out::println);
     }
 }

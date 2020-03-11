@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sise.zhaodaola.business.entity.User;
 import com.sise.zhaodaola.business.mapper.UserMapper;
-import com.sise.zhaodaola.business.service.UserSerivce;
+import com.sise.zhaodaola.business.service.UserService;
 import com.sise.zhaodaola.business.service.dto.UserDto;
 import com.sise.zhaodaola.tool.exception.EntityNotFoundException;
 import org.springframework.cache.annotation.CacheConfig;
@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @CacheConfig(cacheNames = "user")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserSerivce {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
 
     @Cacheable(key = "'loadUserByUsername:'+#p0")

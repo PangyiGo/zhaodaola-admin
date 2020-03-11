@@ -8,5 +8,5 @@ import com.sise.zhaodaola.business.entity.Contact;
  * @Author: PangYi
  * @Date 2020/3/610:46 下午
  */
-public interface ContactSerivce extends IService<Contact> {
+public interface ContactService extends IService<Contact> {
 }

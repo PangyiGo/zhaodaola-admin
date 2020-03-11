@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.Async;
  * @Author: PangYi
  * @Date 2020/3/610:46 下午
  */
-public interface LogSerivce extends IService<Log> {
+public interface LogService extends IService<Log> {
 
     /**
      * 保存日志数据

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sise.zhaodaola.business.entity.Menu;
 import com.sise.zhaodaola.business.entity.Role;
 import com.sise.zhaodaola.business.mapper.RoleMapper;
-import com.sise.zhaodaola.business.service.RoleSerivce;
+import com.sise.zhaodaola.business.service.RoleService;
 import com.sise.zhaodaola.tool.utils.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 @CacheConfig(cacheNames = "role")
-public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleSerivce {
+public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
 
 
     @Cacheable(key = "'loadPermissionByUser'+#p0")

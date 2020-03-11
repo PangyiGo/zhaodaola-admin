@@ -10,7 +10,7 @@ import java.util.Collection;
  * @Author: PangYi
  * @Date 2020/3/610:46 下午
  */
-public interface RoleSerivce extends IService<Role> {
+public interface RoleService extends IService<Role> {
 
     /**
      * 获取指定用户ID的权限列表

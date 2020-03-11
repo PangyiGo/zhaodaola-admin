@@ -1,7 +1,7 @@
 package com.sise.zhaodaola.core.logging.aop;
 
 import com.sise.zhaodaola.business.entity.Log;
-import com.sise.zhaodaola.business.service.LogSerivce;
+import com.sise.zhaodaola.business.service.LogService;
 import com.sise.zhaodaola.tool.utils.RequestHolder;
 import com.sise.zhaodaola.tool.utils.SecurityUtils;
 import com.sise.zhaodaola.tool.utils.StringUtils;
@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.sise.zhaodaola.tool.utils.SecurityUtils.getUsername;
-
 /**
  * @Author: PangYi
  * @Date 2020/3/88:26 下午
@@ -28,11 +26,11 @@ import static com.sise.zhaodaola.tool.utils.SecurityUtils.getUsername;
 @Slf4j
 public class LogAspect {
 
-    private LogSerivce logSerivce;
+    private LogService logSerivce;
 
     ThreadLocal<Long> currentTime = new ThreadLocal<>();
 
-    public LogAspect(LogSerivce logSerivce) {
+    public LogAspect(LogService logSerivce) {
         this.logSerivce = logSerivce;
     }
 

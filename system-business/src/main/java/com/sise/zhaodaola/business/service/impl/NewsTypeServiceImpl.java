@@ -1,12 +1,9 @@
 package com.sise.zhaodaola.business.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sise.zhaodaola.business.entity.Announce;
 import com.sise.zhaodaola.business.entity.NewsType;
-import com.sise.zhaodaola.business.mapper.AnnounceMapper;
 import com.sise.zhaodaola.business.mapper.NewsTypeMapper;
-import com.sise.zhaodaola.business.service.AnnounceSerivce;
-import com.sise.zhaodaola.business.service.NewsTypeSerivce;
+import com.sise.zhaodaola.business.service.NewsTypeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,5 +14,5 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class NewsTypeServiceImpl extends ServiceImpl<NewsTypeMapper, NewsType> implements NewsTypeSerivce {
+public class NewsTypeServiceImpl extends ServiceImpl<NewsTypeMapper, NewsType> implements NewsTypeService {
 }
