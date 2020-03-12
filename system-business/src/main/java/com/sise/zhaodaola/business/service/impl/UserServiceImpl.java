@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DatePattern;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
@@ -70,16 +71,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public List<User> findAll(UserQueryDto userQueryDto) {
-        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery();
-        if (userQueryDto != null) {
-            wrapper.like(StringUtils.isNotBlank(userQueryDto.getUsername()), User::getUsername, userQueryDto.getUsername());
-            wrapper.like(StringUtils.isNotBlank(userQueryDto.getRealName()), User::getRealName, userQueryDto.getRealName());
-            wrapper.like(StringUtils.isNotBlank(userQueryDto.getEmail()), User::getEmail, userQueryDto.getEmail());
-            wrapper.eq(userQueryDto.getStatus() != 0, User::getStatus, userQueryDto.getStatus());
-            wrapper.between(StringUtils.isNotBlank(userQueryDto.getStart()) && StringUtils.isNotBlank(userQueryDto.getEnd()), User::getCreateTime, DateTimeUtils.dateTime(userQueryDto.getStart(), DatePattern.NORM_DATETIME_PATTERN), DateTimeUtils.dateTime(userQueryDto.getEnd(), DatePattern.NORM_DATETIME_PATTERN));
-        }
-        wrapper.ne(User::getUsername, SecurityUtils.getUsername());
-        return super.list(wrapper);
+        return super.list(warpper(userQueryDto));
     }
 
     @Override
@@ -99,8 +91,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             map.put("专业", user.getDept());
             map.put("状态", DictManager.status(user.getStatus()));
             map.put("角色", rolesName.toString());
-            map.put("创建时间",formatter.format(user.getCreateTime()));
-            map.put("更新时间",formatter.format(user.getUpdateTime()));
+            map.put("创建时间", formatter.format(user.getCreateTime()));
+            map.put("更新时间", formatter.format(user.getUpdateTime()));
             download.add(map);
         });
         FileUtils.downloadExcel(download, response);
@@ -110,16 +102,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public PageHelper getUserList(UserQueryDto userQueryDto, PageQueryCriteria criteria) {
         // 分页
         Page<User> userPage = new Page<>(criteria.getPage(), criteria.getSize());
-        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery();
-        if (userQueryDto != null) {
-            wrapper.like(StringUtils.isNotBlank(userQueryDto.getUsername()), User::getUsername, userQueryDto.getUsername());
-            wrapper.like(StringUtils.isNotBlank(userQueryDto.getRealName()), User::getRealName, userQueryDto.getRealName());
-            wrapper.like(StringUtils.isNotBlank(userQueryDto.getEmail()), User::getEmail, userQueryDto.getEmail());
-            wrapper.eq(userQueryDto.getStatus() != 0, User::getStatus, userQueryDto.getStatus());
-            wrapper.between(StringUtils.isNotBlank(userQueryDto.getStart()) && StringUtils.isNotBlank(userQueryDto.getEnd()), User::getCreateTime, DateTimeUtils.dateTime(userQueryDto.getStart(), DatePattern.NORM_DATETIME_PATTERN), DateTimeUtils.dateTime(userQueryDto.getEnd(), DatePattern.NORM_DATETIME_PATTERN));
-        }
-        wrapper.ne(User::getUsername, SecurityUtils.getUsername());
-        IPage<User> page = super.page(userPage, wrapper);
+        IPage<User> page = super.page(userPage, warpper(userQueryDto));
         List<UserListDto> userListDtoList = new ArrayList<>(0);
         page.getRecords().forEach(user -> {
             UserListDto userListDto = new UserListDto();
@@ -128,6 +111,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             userListDtoList.add(userListDto);
         });
         return PageUtils.toPage(userListDtoList, page.getCurrent(), page.getSize(), page.getTotal());
+    }
+
+    private LambdaQueryWrapper<User> warpper(UserQueryDto userQueryDto) {
+        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery();
+        if (ObjectUtils.isNotEmpty(userQueryDto)) {
+            wrapper.like(StringUtils.isNotBlank(userQueryDto.getUsername()), User::getUsername, userQueryDto.getUsername());
+            wrapper.like(StringUtils.isNotBlank(userQueryDto.getRealName()), User::getRealName, userQueryDto.getRealName());
+            wrapper.like(StringUtils.isNotBlank(userQueryDto.getEmail()), User::getEmail, userQueryDto.getEmail());
+            wrapper.eq(userQueryDto.getStatus() != 0, User::getStatus, userQueryDto.getStatus());
+            if (StringUtils.isNotBlank(userQueryDto.getStart()) && StringUtils.isNotBlank(userQueryDto.getEnd()))
+                wrapper.between(User::getCreateTime, DateTimeUtils.dateTime(userQueryDto.getStart(), DatePattern.NORM_DATETIME_PATTERN), DateTimeUtils.dateTime(userQueryDto.getEnd(), DatePattern.NORM_DATETIME_PATTERN));
+        }
+        wrapper.ne(User::getUsername, SecurityUtils.getUsername());
+        return wrapper;
     }
 
     @Transactional(rollbackFor = Exception.class)
