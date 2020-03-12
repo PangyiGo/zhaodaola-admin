@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,5 +41,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                 .collect(Collectors.toSet())
         );
         return permission.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+    }
+
+    @Override
+    public List<Role> getRoleList() {
+        return super.list();
     }
 }

@@ -5,6 +5,7 @@ import com.sise.zhaodaola.business.entity.Role;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @Author: PangYi
@@ -19,4 +20,11 @@ public interface RoleService extends IService<Role> {
      * @return /
      */
     Collection<GrantedAuthority> mapToGrantedAuthorization(Integer uid);
+
+    /**
+     * 获取全部角色列表
+     *
+     * @return /
+     */
+    List<Role> getRoleList();
 }
