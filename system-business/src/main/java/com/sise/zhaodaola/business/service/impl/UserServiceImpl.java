@@ -60,7 +60,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             wrapper.between(StringUtils.isNotBlank(userQueryDto.getStart()) && StringUtils.isNotBlank(userQueryDto.getEnd()), User::getCreateTime, DateTimeUtils.dateTime(userQueryDto.getStart(), DatePattern.NORM_DATETIME_PATTERN), DateTimeUtils.dateTime(userQueryDto.getEnd(), DatePattern.NORM_DATETIME_PATTERN));
         }
         IPage<User> page = super.page(userPage, wrapper);
-        // 返回
         return PageUtils.toPage(page.getRecords(), page.getCurrent(), page.getSize(), page.getTotal());
     }
 }
