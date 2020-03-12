@@ -31,13 +31,13 @@ public class Link extends Model<Link> implements Serializable {
 
     private String title;
 
-    private int type;
+    private Integer type;
 
     private String link;
 
     private String remark;
 
-    private int status;
+    private Integer status;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

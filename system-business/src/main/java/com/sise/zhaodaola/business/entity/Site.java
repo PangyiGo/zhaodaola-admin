@@ -11,7 +11,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import javax.print.attribute.standard.PrinterURI;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -36,7 +35,7 @@ public class Site extends Model<Site> implements Serializable {
 
     private String contact;
 
-    private int status;
+    private Integer status;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

@@ -27,11 +27,11 @@ public class UserDto implements Serializable {
 
     private String email;
 
-    private int gender;
+    private Integer gender;
 
     private String avatar;
 
     private String dept;
 
-    private int status;
+    private Integer status;
 }

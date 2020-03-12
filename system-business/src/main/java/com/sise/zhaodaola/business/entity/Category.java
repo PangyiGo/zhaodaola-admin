@@ -33,7 +33,7 @@ public class Category extends Model<Category> implements Serializable {
 
     private String about;
 
-    private int status;
+    private Integer status;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

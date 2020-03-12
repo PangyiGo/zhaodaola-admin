@@ -11,9 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import javax.print.attribute.standard.PrinterURI;
 import java.io.Serializable;
-import java.security.PrivateKey;
 import java.time.LocalDateTime;
 
 /**
@@ -41,7 +39,7 @@ public class Thanks extends Model<Thanks> implements Serializable {
 
     private String portCode;
 
-    private int status;
+    private Integer status;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

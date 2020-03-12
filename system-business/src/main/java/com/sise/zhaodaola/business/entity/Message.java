@@ -29,7 +29,7 @@ public class Message extends Model<Message> implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    private int type;
+    private Integer type;
 
     private Integer from;
 
@@ -43,7 +43,7 @@ public class Message extends Model<Message> implements Serializable {
 
     private Integer commentId;
 
-    private int status;
+    private Integer status;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

@@ -35,13 +35,13 @@ public class Banner extends Model<Banner> implements Serializable {
 
     private String link;
 
-    private int type;
+    private Integer type;
 
     private String image;
 
-    private int sort;
+    private Integer sort;
 
-    private int status;
+    private Integer status;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

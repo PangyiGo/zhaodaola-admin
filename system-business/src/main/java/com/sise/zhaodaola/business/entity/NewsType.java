@@ -33,7 +33,7 @@ public class NewsType extends Model<NewsType> implements Serializable {
 
     private String remark;
 
-    private int status;
+    private Integer status;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

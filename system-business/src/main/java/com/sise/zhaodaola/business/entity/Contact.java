@@ -29,7 +29,7 @@ public class Contact extends Model<Contact> implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    private int type;
+    private Integer type;
 
     private String title;
 
@@ -43,7 +43,7 @@ public class Contact extends Model<Contact> implements Serializable {
 
     private String owner;
 
-    private int status;
+    private Integer status;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

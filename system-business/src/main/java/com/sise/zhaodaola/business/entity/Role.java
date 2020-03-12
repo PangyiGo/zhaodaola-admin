@@ -33,7 +33,7 @@ public class Role extends Model<Role> implements Serializable {
 
     private String remark;
 
-    private int level;
+    private Integer level;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

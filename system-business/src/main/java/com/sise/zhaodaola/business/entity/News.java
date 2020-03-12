@@ -39,15 +39,15 @@ public class News extends Model<News> implements Serializable {
 
     private String dept;
 
-    private int palcement;
+    private Integer palcement;
 
-    private long show;
+    private Long show;
 
     private String image;
 
     private Integer type;
 
-    private int status;
+    private Integer status;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

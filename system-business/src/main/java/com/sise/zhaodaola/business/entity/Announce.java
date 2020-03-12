@@ -37,9 +37,9 @@ public class Announce extends Model<Announce> implements Serializable {
 
     private String username;
 
-    private long show;
+    private Long show;
 
-    private int status;
+    private Integer status;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

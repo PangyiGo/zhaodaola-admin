@@ -35,13 +35,13 @@ public class Menu extends Model<Menu> implements Serializable {
 
     private String icon;
 
-    private int sort;
+    private Integer sort;
 
     private Integer pid;
 
     private String permission;
 
-    private int type;
+    private Integer type;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
