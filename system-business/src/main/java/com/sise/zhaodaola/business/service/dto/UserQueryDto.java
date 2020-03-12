@@ -11,11 +11,7 @@ import lombok.Data;
 @Data
 public class UserQueryDto {
 
-    private String username;
-
-    private String realName;
-
-    private String email;
+    private String word;
 
     private int status;
 

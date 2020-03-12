@@ -115,15 +115,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     private LambdaQueryWrapper<User> warpper(UserQueryDto userQueryDto) {
         LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery();
+        wrapper.ne(User::getUsername, SecurityUtils.getUsername());
         if (ObjectUtils.isNotEmpty(userQueryDto)) {
-            wrapper.like(StringUtils.isNotBlank(userQueryDto.getUsername()), User::getUsername, userQueryDto.getUsername());
-            wrapper.like(StringUtils.isNotBlank(userQueryDto.getRealName()), User::getRealName, userQueryDto.getRealName());
-            wrapper.like(StringUtils.isNotBlank(userQueryDto.getEmail()), User::getEmail, userQueryDto.getEmail());
+            wrapper.and(StringUtils.isNoneBlank(userQueryDto.getWord()), q -> {
+                q.or().like(StringUtils.isNotBlank(userQueryDto.getWord()), User::getUsername, userQueryDto.getWord());
+                q.or().like(StringUtils.isNotBlank(userQueryDto.getWord()), User::getRealName, userQueryDto.getWord());
+                q.or().like(StringUtils.isNotBlank(userQueryDto.getWord()), User::getEmail, userQueryDto.getWord());
+            });
             wrapper.eq(userQueryDto.getStatus() != 0, User::getStatus, userQueryDto.getStatus());
             if (StringUtils.isNotBlank(userQueryDto.getStart()) && StringUtils.isNotBlank(userQueryDto.getEnd()))
                 wrapper.between(User::getCreateTime, DateTimeUtils.dateTime(userQueryDto.getStart(), DatePattern.NORM_DATETIME_PATTERN), DateTimeUtils.dateTime(userQueryDto.getEnd(), DatePattern.NORM_DATETIME_PATTERN));
         }
-        wrapper.ne(User::getUsername, SecurityUtils.getUsername());
         return wrapper;
     }
 

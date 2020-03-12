@@ -13,8 +13,8 @@ import java.io.Serializable;
 @Data
 public class PageQueryCriteria implements Serializable {
 
-    private long page;
+    private long page = 1;
 
-    private long size;
+    private long size = 10;
 
 }

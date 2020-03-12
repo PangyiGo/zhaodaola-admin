@@ -77,7 +77,7 @@ class CoreApplicationTests {
     @Test
     void test05() {
         UserQueryDto queryDto = new UserQueryDto();
-        queryDto.setUsername(null);
+        queryDto.setWord(null);
         queryDto.setStatus(1);
 
         PageQueryCriteria criteria = new PageQueryCriteria();

@@ -7,6 +7,7 @@ import com.sise.zhaodaola.tool.utils.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Objects;
 
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
@@ -29,7 +31,7 @@ public class GlobalExceptionHandler {
      * 处理所有不可知的异常
      */
     @ExceptionHandler(Throwable.class)
-    public ResponseEntity<ApiError> handleException(Throwable e){
+    public ResponseEntity<ApiError> handleException(Throwable e) {
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
         return buildResponseEntity(ApiError.error(e.getMessage()));
@@ -39,7 +41,7 @@ public class GlobalExceptionHandler {
      * BadCredentialsException
      */
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiError> badCredentialsException(BadCredentialsException e){
+    public ResponseEntity<ApiError> badCredentialsException(BadCredentialsException e) {
         // 打印堆栈信息
         String message = "坏的凭证".equals(e.getMessage()) ? "用户名或密码不正确" : e.getMessage();
         log.error(message);
@@ -53,7 +55,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> badRequestException(BadRequestException e) {
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
-        return buildResponseEntity(ApiError.error(e.getStatus(),e.getMessage()));
+        return buildResponseEntity(ApiError.error(e.getStatus(), e.getMessage()));
+    }
+
+    /**
+     * 处理无授权异常
+     */
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public ResponseEntity<ApiError> accessDeniedException(AccessDeniedException e) {
+        // 打印堆栈信息
+        log.error(ThrowableUtil.getStackTrace(e));
+        return buildResponseEntity(ApiError.error(FORBIDDEN.value(), e.getMessage()));
     }
 
     /**
@@ -73,20 +85,20 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> entityNotFoundException(EntityNotFoundException e) {
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
-        return buildResponseEntity(ApiError.error(NOT_FOUND.value(),e.getMessage()));
+        return buildResponseEntity(ApiError.error(NOT_FOUND.value(), e.getMessage()));
     }
 
     /**
      * 处理所有接口数据验证异常
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
+    public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
         String[] str = Objects.requireNonNull(e.getBindingResult().getAllErrors().get(0).getCodes())[1].split("\\.");
         String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         String msg = "不能为空";
-        if(msg.equals(message)){
+        if (msg.equals(message)) {
             message = str[1] + ":" + message;
         }
         return buildResponseEntity(ApiError.error(message));
