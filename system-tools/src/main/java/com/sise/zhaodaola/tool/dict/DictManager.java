@@ -14,4 +14,8 @@ public class DictManager {
     public static Boolean isEnable(Integer status) {
         return status.equals(1);
     }
+
+    public static String status(Integer status) {
+        return status.equals(1) ? "激活" : "禁用";
+    }
 }

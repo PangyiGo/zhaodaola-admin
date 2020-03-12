@@ -2,7 +2,10 @@ package com.sise.zhaodaola.business.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sise.zhaodaola.business.entity.User;
+import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
 import com.sise.zhaodaola.business.service.dto.UserDto;
+import com.sise.zhaodaola.business.service.dto.UserQueryDto;
+import com.sise.zhaodaola.tool.utils.PageHelper;
 
 /**
  * @Author: PangYi
@@ -17,4 +20,13 @@ public interface UserService extends IService<User> {
      * @return /
      */
     UserDto findByUsername(String username);
+
+    /**
+     * 分页查询用户列表
+     *
+     * @param userQueryDto 条件
+     * @param criteria     分页
+     * @return /
+     */
+    PageHelper getUserList(UserQueryDto userQueryDto, PageQueryCriteria criteria);
 }

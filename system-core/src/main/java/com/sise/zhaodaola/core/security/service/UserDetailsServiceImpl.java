@@ -25,22 +25,22 @@ import java.util.Collection;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private UserService userSerivce;
-    private RoleService roleSerivce;
+    private UserService userService;
+    private RoleService roleService;
 
-    public UserDetailsServiceImpl(UserService userSerivce, RoleService roleSerivce) {
-        this.userSerivce = userSerivce;
-        this.roleSerivce = roleSerivce;
+    public UserDetailsServiceImpl(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDto userDto = userSerivce.findByUsername(username);
+        UserDto userDto = userService.findByUsername(username);
         if (ObjectUtil.isEmpty(userDto))
             throw new BadRequestException("账号不存在");
         if (!DictManager.isEnable(userDto.getStatus()))
             throw new BadRequestException("账号不可用，请联系管理员");
-        Collection<GrantedAuthority> grantedAuthorities = roleSerivce.mapToGrantedAuthorization(userDto.getId());
+        Collection<GrantedAuthority> grantedAuthorities = roleService.mapToGrantedAuthorization(userDto.getId());
         return this.createJwtUser(userDto, grantedAuthorities);
     }
 

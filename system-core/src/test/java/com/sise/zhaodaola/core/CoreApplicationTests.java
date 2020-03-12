@@ -7,7 +7,10 @@ import com.sise.zhaodaola.business.mapper.RoleMapper;
 import com.sise.zhaodaola.business.service.MenuService;
 import com.sise.zhaodaola.business.service.RoleService;
 import com.sise.zhaodaola.business.service.UserService;
+import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
 import com.sise.zhaodaola.business.service.dto.UserDto;
+import com.sise.zhaodaola.business.service.dto.UserQueryDto;
+import com.sise.zhaodaola.tool.utils.PageHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -69,5 +72,20 @@ class CoreApplicationTests {
     void test04(){
         Set<String> keyByUsername = menuService.findMenusKeyByUsername();
         keyByUsername.forEach(System.out::println);
+    }
+
+    @Test
+    void test05(){
+        UserQueryDto queryDto = new UserQueryDto();
+        queryDto.setUsername(null);
+        queryDto.setStatus(1);
+
+        PageQueryCriteria criteria = new PageQueryCriteria();
+        criteria.setPage(1);
+        criteria.setSize(10);
+
+        PageHelper userList = userService.getUserList(null, criteria);
+
+        System.out.println(userList);
     }
 }
