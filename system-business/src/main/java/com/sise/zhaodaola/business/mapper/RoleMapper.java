@@ -35,4 +35,7 @@ public interface RoleMapper extends BaseMapper<Role> {
             "WHERE\n" +
             "\tUSER.id = #{id}")
     Set<Role> findByUserId(Integer uid);
+
+    @Select("SELECT * FROM system_role role WHERE role.`name` = #{name} LIMIT 1")
+    Role findRoleByName(String name);
 }

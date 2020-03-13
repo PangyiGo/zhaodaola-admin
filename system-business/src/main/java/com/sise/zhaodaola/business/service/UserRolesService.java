@@ -20,10 +20,17 @@ public interface UserRolesService extends IService<UserRoles> {
     void updateUserRoles(Integer uid, Set<Integer> rids);
 
     /**
-     * 接触用户与角色关联
+     * 解除用户与角色关联
      *
      * @param uid  用户ID
-     * @param rids 默认null接触全部
+     * @param rids 默认null解除全部
      */
     void deleteUserRoles(Integer uid, Set<Integer> rids);
+
+    /**
+     * 绑定用户与角色
+     * @param uid 用户ID
+     * @param rids 角色ID列表
+     */
+    void addUserRoles(Integer uid,Set<Integer> rids);
 }

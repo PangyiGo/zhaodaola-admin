@@ -7,6 +7,7 @@ import com.sise.zhaodaola.business.service.dto.UserDto;
 import com.sise.zhaodaola.business.service.dto.UserQueryDto;
 import com.sise.zhaodaola.business.service.dto.UserUpdateDto;
 import com.sise.zhaodaola.tool.utils.PageHelper;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -64,4 +65,25 @@ public interface UserService extends IService<User> {
      * @param uid 用户ID
      */
     void resetPasswordUser(List<Integer> uid);
+
+    /**
+     * 新增用户
+     *
+     * @param userUpdateDto 新用户
+     */
+    void createUser(UserUpdateDto userUpdateDto);
+
+    /**
+     * 删除用户
+     *
+     * @param userIds 用户ID列表
+     */
+    void deleteUser(List<Integer> userIds);
+
+    /**
+     * 批量excel导入用户数据
+     *
+     * @param file 文件
+     */
+    void importUser(MultipartFile file);
 }

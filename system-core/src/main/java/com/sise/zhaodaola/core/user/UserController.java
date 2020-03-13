@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -44,7 +45,7 @@ public class UserController {
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
-    @Log("用户修改")
+    @Log("修改用户")
     @PreAuthorize("@auth.check('user:update')")
     @PostMapping("/update")
     public ResponseEntity<Object> updateUser(@RequestBody UserUpdateDto userUpdateDto) {
@@ -65,5 +66,32 @@ public class UserController {
     @PostMapping("/download")
     public void downloadUser(UserQueryDto userQueryDto, HttpServletResponse response) throws IOException {
         userService.downloadUser(userService.findAll(userQueryDto), response);
+    }
+
+    @Log("新增用户")
+    @PreAuthorize("@auth.check('user:add')")
+    @PostMapping("/create")
+    public ResponseEntity<Object> createUser(@RequestBody UserUpdateDto userUpdateDto) {
+        userService.createUser(userUpdateDto);
+        return new ResponseEntity<>("新增用户成功", HttpStatus.OK);
+    }
+
+    @Log("删除用户")
+    @PreAuthorize("@auth.check('user:delete')")
+    @PostMapping("/delete")
+    public ResponseEntity<Object> deleteUser(@RequestBody List<Integer> userIds) {
+        /*
+            删除规则：先解除角色绑定，再删除用户如存在外键异常，删除失败
+         */
+        userService.deleteUser(userIds);
+        return new ResponseEntity<>("用户已成功删除", HttpStatus.OK);
+    }
+
+    @Log("用户批量导入")
+    @PreAuthorize("@auth.check('user:import')")
+    @PostMapping("/import")
+    public ResponseEntity<Object> importUser(MultipartFile file) {
+        userService.importUser(file);
+        return ResponseEntity.ok("Hello");
     }
 }

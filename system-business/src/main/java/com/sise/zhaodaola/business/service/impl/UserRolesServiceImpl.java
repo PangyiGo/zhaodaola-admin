@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -40,5 +42,18 @@ public class UserRolesServiceImpl extends ServiceImpl<UserRolesMapper, UserRoles
         wrapper.eq(UserRoles::getUserId, uid);
         wrapper.in(CollectionUtil.isNotEmpty(rids), UserRoles::getRoleId, rids);
         super.remove(wrapper);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void addUserRoles(Integer uid, Set<Integer> rids) {
+        List<UserRoles> userRolesList = new ArrayList<>(0);
+        rids.forEach(role->{
+            UserRoles userRoles = new UserRoles();
+            userRoles.setUserId(uid);
+            userRoles.setRoleId(role);
+            userRolesList.add(userRoles);
+        });
+        super.saveBatch(userRolesList);
     }
 }

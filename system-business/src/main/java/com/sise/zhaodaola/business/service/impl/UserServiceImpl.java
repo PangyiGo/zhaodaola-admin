@@ -3,8 +3,10 @@ package com.sise.zhaodaola.business.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
@@ -19,6 +21,7 @@ import com.sise.zhaodaola.business.service.UserRolesService;
 import com.sise.zhaodaola.business.service.UserService;
 import com.sise.zhaodaola.business.service.dto.*;
 import com.sise.zhaodaola.tool.dict.DictManager;
+import com.sise.zhaodaola.tool.exception.BadRequestException;
 import com.sise.zhaodaola.tool.exception.EntityNotFoundException;
 import com.sise.zhaodaola.tool.utils.*;
 import org.springframework.cache.annotation.CacheConfig;
@@ -27,9 +30,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -71,7 +77,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public List<User> findAll(UserQueryDto userQueryDto) {
-        return super.list(warpper(userQueryDto));
+        return super.list(wrapper(userQueryDto));
     }
 
     @Override
@@ -102,7 +108,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public PageHelper getUserList(UserQueryDto userQueryDto, PageQueryCriteria criteria) {
         // 分页
         Page<User> userPage = new Page<>(criteria.getPage(), criteria.getSize());
-        IPage<User> page = super.page(userPage, warpper(userQueryDto));
+        IPage<User> page = super.page(userPage, wrapper(userQueryDto));
         List<UserListDto> userListDtoList = new ArrayList<>(0);
         page.getRecords().forEach(user -> {
             UserListDto userListDto = new UserListDto();
@@ -113,7 +119,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return PageUtils.toPage(userListDtoList, page.getCurrent(), page.getSize(), page.getTotal());
     }
 
-    private LambdaQueryWrapper<User> warpper(UserQueryDto userQueryDto) {
+    private LambdaQueryWrapper<User> wrapper(UserQueryDto userQueryDto) {
         LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery();
         wrapper.ne(User::getUsername, SecurityUtils.getUsername());
         if (ObjectUtils.isNotEmpty(userQueryDto)) {
@@ -146,5 +152,78 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String initPassword = passwordEncoder.encode("111111");
         LambdaUpdateWrapper<User> wrapper = Wrappers.<User>lambdaUpdate().set(User::getPassword, initPassword).in(CollectionUtil.isNotEmpty(uid), User::getId, uid);
         super.update(wrapper);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void createUser(UserUpdateDto userUpdateDto) {
+        User newUser = new User();
+        BeanUtil.copyProperties(userUpdateDto, newUser);
+        // 防止重复
+        User user = super.getOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, newUser.getUsername()), true);
+        if (ObjectUtil.isNotNull(user))
+            throw new BadRequestException(newUser.getUsername() + ":账号记录已存在");
+        if (userUpdateDto.getRoles() == null)
+            throw new BadRequestException("新增用户角色不允许为空");
+        // 初始值
+        newUser.setPassword(passwordEncoder.encode("111111"));
+        newUser.setNickName(newUser.getUsername());
+        newUser.setStatus(1);
+        newUser.setCreateTime(LocalDateTime.now());
+        newUser.setUpdateTime(LocalDateTime.now());
+        newUser.setAvatar("default.jpg");
+        if (super.save(newUser)) {
+            Integer uid = newUser.getId();
+            userRolesService.addUserRoles(uid, userUpdateDto.getRoles());
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteUser(List<Integer> userIds) {
+        // 解除用户角色绑定
+        userIds.forEach(uid -> {
+            userRolesService.deleteUserRoles(uid, null);
+        });
+        // 删除
+        userIds.forEach(uid -> {
+            try {
+                super.removeById(uid);
+            } catch (Exception e) {
+                User user = super.getById(uid);
+                throw new BadRequestException("账号：" + user.getUsername() + "已有其他相关数据，无法删除");
+            }
+        });
+    }
+
+    @Override
+    public void importUser(MultipartFile file) {
+        File importFile = FileUtils.toFile(file);
+        String extensionName = FileUtils.getExtensionName(importFile.getName());
+        if (!CollectionUtil.newArrayList("xls", "xlsx").contains(extensionName)) {
+            throw new BadRequestException("上传文件格式错误，请上传以.xls或.xlsx结尾的文件");
+        }
+        // 读取文件内容
+        ExcelReader excelReader = ExcelUtil.getReader(importFile);
+        List<UserImportDto> userImportDtoList = excelReader.readAll(UserImportDto.class);
+        // 普通用户角色
+        Role role = roleMapper.findRoleByName("common");
+        userImportDtoList.forEach(userImportDto -> {
+            User user = new User();
+            BeanUtil.copyProperties(userImportDto, user);
+            if (ObjectUtil.isNotNull(super.getOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()), true))) {
+                throw new BadRequestException(user.getUsername() + ":账号记录已存在");
+            }
+            user.setPassword(passwordEncoder.encode("111111"));
+            user.setNickName(user.getUsername());
+            user.setStatus(1);
+            user.setCreateTime(LocalDateTime.now());
+            user.setUpdateTime(LocalDateTime.now());
+            user.setAvatar("default.jpg");
+            if (super.save(user)) {
+                Integer uid = user.getId();
+                userRolesService.addUserRoles(uid, CollectionUtil.newHashSet(role.getId()));
+            }
+        });
     }
 }

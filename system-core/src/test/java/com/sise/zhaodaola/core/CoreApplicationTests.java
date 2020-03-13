@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -107,8 +108,33 @@ class CoreApplicationTests {
     }
 
     @Test
-    void test08(){
+    void test08() {
         List<Role> roleList = roleService.getRoleList();
         roleList.forEach(System.out::println);
+    }
+
+    @Test
+    void test09() {
+        userService.resetPasswordUser(Arrays.asList(1, 2));
+    }
+
+    @Test
+    void test10(){
+        UserUpdateDto userUpdateDto = new UserUpdateDto();
+        userUpdateDto.setUsername("1640129433");
+        userUpdateDto.setRealName("吴伟康");
+        userUpdateDto.setIdCard("440804199611051142");
+        userUpdateDto.setTelephone("17620106523");
+        userUpdateDto.setEmail("2016545@163.com");
+        userUpdateDto.setGender(1);
+        userUpdateDto.setDept("软件系");
+        userUpdateDto.setRoles(CollectionUtil.newHashSet(2));
+
+        userService.createUser(userUpdateDto);
+    }
+
+    @Test
+    void test11(){
+        userService.deleteUser(CollectionUtil.newArrayList(4));
     }
 }
