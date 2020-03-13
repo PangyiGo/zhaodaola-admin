@@ -23,8 +23,6 @@ public class RedisUtils {
 
     private RedisTemplate<Object,Object> redisTemplate;
 
-    @Value("${jwt.online-key}")
-    private String onlineKey;
 
     public RedisUtils(RedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;

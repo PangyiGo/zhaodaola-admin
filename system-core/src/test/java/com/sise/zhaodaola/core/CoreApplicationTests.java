@@ -121,14 +121,14 @@ class CoreApplicationTests {
     @Test
     void test10(){
         UserUpdateDto userUpdateDto = new UserUpdateDto();
-        userUpdateDto.setUsername("1640129433");
-        userUpdateDto.setRealName("吴伟康");
+        userUpdateDto.setUsername("1640129466");
+        userUpdateDto.setRealName("郑敏明");
         userUpdateDto.setIdCard("440804199611051142");
         userUpdateDto.setTelephone("17620106523");
         userUpdateDto.setEmail("2016545@163.com");
-        userUpdateDto.setGender(1);
+        userUpdateDto.setGender(2);
         userUpdateDto.setDept("软件系");
-        userUpdateDto.setRoles(CollectionUtil.newHashSet(2));
+        userUpdateDto.setRoles(CollectionUtil.newHashSet(3));
 
         userService.createUser(userUpdateDto);
     }

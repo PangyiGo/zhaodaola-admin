@@ -15,6 +15,8 @@ public class UserQueryDto {
 
     private int status;
 
+    private String dept;
+
     private String start;
 
     private String end;

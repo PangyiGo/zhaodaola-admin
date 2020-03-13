@@ -128,6 +128,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 q.or().like(StringUtils.isNotBlank(userQueryDto.getWord()), User::getRealName, userQueryDto.getWord());
                 q.or().like(StringUtils.isNotBlank(userQueryDto.getWord()), User::getEmail, userQueryDto.getWord());
             });
+            wrapper.eq(StringUtils.isNoneBlank(userQueryDto.getDept()), User::getDept, userQueryDto.getDept());
             wrapper.eq(userQueryDto.getStatus() != 0, User::getStatus, userQueryDto.getStatus());
             if (StringUtils.isNotBlank(userQueryDto.getStart()) && StringUtils.isNotBlank(userQueryDto.getEnd()))
                 wrapper.between(User::getCreateTime, DateTimeUtils.dateTime(userQueryDto.getStart(), DatePattern.NORM_DATETIME_PATTERN), DateTimeUtils.dateTime(userQueryDto.getEnd(), DatePattern.NORM_DATETIME_PATTERN));
