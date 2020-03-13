@@ -166,12 +166,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (userUpdateDto.getRoles() == null)
             throw new BadRequestException("新增用户角色不允许为空");
         // 初始值
-        newUser.setPassword(passwordEncoder.encode("111111"));
-        newUser.setNickName(newUser.getUsername());
-        newUser.setStatus(1);
-        newUser.setCreateTime(LocalDateTime.now());
-        newUser.setUpdateTime(LocalDateTime.now());
-        newUser.setAvatar("default.jpg");
+        initData(newUser);
         if (super.save(newUser)) {
             Integer uid = newUser.getId();
             userRolesService.addUserRoles(uid, userUpdateDto.getRoles());
@@ -196,6 +191,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         });
     }
 
+    private void initData(User user) {
+        user.setPassword(passwordEncoder.encode("111111"));
+        user.setNickName(user.getUsername());
+        user.setStatus(1);
+        user.setCreateTime(LocalDateTime.now());
+        user.setUpdateTime(LocalDateTime.now());
+        user.setAvatar("default.jpg");
+    }
+
     @Override
     public void importUser(MultipartFile file) {
         File importFile = FileUtils.toFile(file);
@@ -214,12 +218,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             if (ObjectUtil.isNotNull(super.getOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()), true))) {
                 throw new BadRequestException(user.getUsername() + ":账号记录已存在");
             }
-            user.setPassword(passwordEncoder.encode("111111"));
-            user.setNickName(user.getUsername());
-            user.setStatus(1);
-            user.setCreateTime(LocalDateTime.now());
-            user.setUpdateTime(LocalDateTime.now());
-            user.setAvatar("default.jpg");
+            initData(user);
             if (super.save(user)) {
                 Integer uid = user.getId();
                 userRolesService.addUserRoles(uid, CollectionUtil.newHashSet(role.getId()));
