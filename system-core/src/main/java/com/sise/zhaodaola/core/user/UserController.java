@@ -92,6 +92,6 @@ public class UserController {
     @PostMapping("/import")
     public ResponseEntity<Object> importUser(MultipartFile file) {
         userService.importUser(file);
-        return ResponseEntity.ok("Hello");
+        return ResponseEntity.ok("批量导入数据成功");
     }
 }
