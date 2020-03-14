@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sise.zhaodaola.business.entity.UserRoles;
 import com.sise.zhaodaola.business.mapper.UserRolesMapper;
 import com.sise.zhaodaola.business.service.UserRolesService;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +23,10 @@ import java.util.Set;
  */
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
+@CacheConfig(cacheNames = "role")
 public class UserRolesServiceImpl extends ServiceImpl<UserRolesMapper, UserRoles> implements UserRolesService {
 
+    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateUserRoles(Integer uid, Set<Integer> rids) {
@@ -35,6 +39,7 @@ public class UserRolesServiceImpl extends ServiceImpl<UserRolesMapper, UserRoles
         });
     }
 
+    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteUserRoles(Integer uid, Set<Integer> rids) {
@@ -44,6 +49,7 @@ public class UserRolesServiceImpl extends ServiceImpl<UserRolesMapper, UserRoles
         super.remove(wrapper);
     }
 
+    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void addUserRoles(Integer uid, Set<Integer> rids) {

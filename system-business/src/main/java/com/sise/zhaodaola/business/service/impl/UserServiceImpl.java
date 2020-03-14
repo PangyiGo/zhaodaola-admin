@@ -25,6 +25,7 @@ import com.sise.zhaodaola.tool.exception.BadRequestException;
 import com.sise.zhaodaola.tool.exception.EntityNotFoundException;
 import com.sise.zhaodaola.tool.utils.*;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -136,17 +137,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return wrapper;
     }
 
+    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateUser(UserUpdateDto userUpdateDto) {
         User user = new User();
         BeanUtil.copyProperties(userUpdateDto, user);
+        user.setUpdateTime(LocalDateTime.now());
         if (super.updateById(user)) {
             // 修改角色
             userRolesService.updateUserRoles(user.getId(), userUpdateDto.getRoles());
         }
     }
 
+    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void resetPasswordUser(List<Integer> uid) {
@@ -155,6 +159,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         super.update(wrapper);
     }
 
+    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void createUser(UserUpdateDto userUpdateDto) {
@@ -174,6 +179,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
     }
 
+    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteUser(List<Integer> userIds) {
@@ -201,6 +207,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setAvatar("default.jpg");
     }
 
+    @CacheEvict(allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void importUser(MultipartFile file) {
         File importFile = FileUtils.toFile(file);
@@ -215,14 +223,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Role role = roleMapper.findRoleByName("common");
         userImportDtoList.forEach(userImportDto -> {
             User user = new User();
-            BeanUtil.copyProperties(userImportDto, user);
-            if (ObjectUtil.isNotNull(super.getOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()), true))) {
-                throw new BadRequestException(user.getUsername() + ":账号记录已存在");
-            }
-            initData(user);
-            if (super.save(user)) {
-                Integer uid = user.getId();
-                userRolesService.addUserRoles(uid, CollectionUtil.newHashSet(role.getId()));
+            if (userImportDto.getUsername() != null) {
+                BeanUtil.copyProperties(userImportDto, user);
+                if (ObjectUtil.isNotNull(super.getOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()), true))) {
+                    throw new BadRequestException(user.getUsername() + ":账号记录已存在");
+                }
+                initData(user);
+                if (super.save(user)) {
+                    Integer uid = user.getId();
+                    userRolesService.addUserRoles(uid, CollectionUtil.newHashSet(role.getId()));
+                }
             }
         });
     }
