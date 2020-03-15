@@ -125,9 +125,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         wrapper.ne(User::getUsername, SecurityUtils.getUsername());
         if (ObjectUtils.isNotEmpty(userQueryDto)) {
             wrapper.and(StringUtils.isNoneBlank(userQueryDto.getWord()), q -> {
-                q.or().like(StringUtils.isNotBlank(userQueryDto.getWord()), User::getUsername, userQueryDto.getWord());
-                q.or().like(StringUtils.isNotBlank(userQueryDto.getWord()), User::getRealName, userQueryDto.getWord());
-                q.or().like(StringUtils.isNotBlank(userQueryDto.getWord()), User::getEmail, userQueryDto.getWord());
+                q.or().like(User::getUsername, userQueryDto.getWord());
+                q.or().like(User::getRealName, userQueryDto.getWord());
+                q.or().like(User::getEmail, userQueryDto.getWord());
             });
             wrapper.eq(StringUtils.isNoneBlank(userQueryDto.getDept()), User::getDept, userQueryDto.getDept());
             wrapper.eq(userQueryDto.getStatus() != 0, User::getStatus, userQueryDto.getStatus());

@@ -18,4 +18,8 @@ public class DictManager {
     public static String status(Integer status) {
         return status.equals(1) ? "激活" : "禁用";
     }
+
+    public static String show(Integer status) {
+        return status.equals(1) ? "可见" : "隐藏";
+    }
 }
