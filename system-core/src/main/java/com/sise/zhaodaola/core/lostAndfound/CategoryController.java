@@ -69,4 +69,13 @@ public class CategoryController {
         categoryService.updateCategory(category);
         return new ResponseEntity<>("物品分类修改成功", HttpStatus.OK);
     }
+
+    // 获取全部分类信息
+    @PostMapping("/getall")
+    public ResponseEntity<Object> getAll() {
+        CategoryQueryDto queryDto = new CategoryQueryDto();
+        queryDto.setStatus(1);
+        List<Category> allList = categoryService.getAllList(queryDto);
+        return ResponseEntity.ok(allList);
+    }
 }

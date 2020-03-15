@@ -55,7 +55,7 @@ logging:
 
 # 文件存储路径
 file:
-  path: /Users/pangyi/Documents/WorkProjects/zhaodaola-admin/assets/file /
+  path: /Users/pangyi/Documents/WorkProjects/zhaodaola-admin/assets/file/
   avatar: /Users/pangyi/Documents/WorkProjects/zhaodaola-admin/assets/avatar/
   # 文件大小 /M
   maxSize: 100
