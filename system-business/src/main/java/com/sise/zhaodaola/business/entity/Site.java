@@ -33,7 +33,7 @@ public class Site extends Model<Site> implements Serializable {
 
     private String charge;
 
-    private String contact;
+    private String concat;
 
     private Integer status;
 
