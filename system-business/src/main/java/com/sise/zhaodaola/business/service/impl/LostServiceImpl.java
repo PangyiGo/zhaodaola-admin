@@ -3,6 +3,7 @@ package com.sise.zhaodaola.business.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sise.zhaodaola.business.entity.Lost;
@@ -55,7 +56,7 @@ public class LostServiceImpl extends ServiceImpl<LostMapper, Lost> implements Lo
         // init
         UserDto userDto = userService.findByUsername(SecurityUtils.getUsername());
         lost.setUserId(userDto.getId());
-        lost.setUuid("sss");
+        lost.setUuid(IdUtil.simpleUUID());
         lost.setStatus(1);
         lost.setCreateTime(LocalDateTime.now());
         lost.setUpdateTime(LocalDateTime.now());

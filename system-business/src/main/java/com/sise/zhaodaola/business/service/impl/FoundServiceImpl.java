@@ -3,6 +3,7 @@ package com.sise.zhaodaola.business.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sise.zhaodaola.business.entity.Found;
@@ -55,7 +56,7 @@ public class FoundServiceImpl extends ServiceImpl<FoundMapper, Found> implements
         // init
         UserDto userDto = userService.findByUsername(SecurityUtils.getUsername());
         found.setUserId(userDto.getId());
-        found.setUuid("sss");
+        found.setUuid(IdUtil.simpleUUID());
         found.setStatus(1);
         found.setCreateTime(LocalDateTime.now());
         found.setUpdateTime(LocalDateTime.now());

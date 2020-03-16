@@ -73,4 +73,13 @@ public class SiteController {
         siteService.updateSite(site);
         return new ResponseEntity<>("认领站点修改成功", HttpStatus.OK);
     }
+
+    // 获取全部的认领站点信息
+    @PostMapping("/getAll")
+    public ResponseEntity<Object> getAll() {
+        SiteQueryDto siteQueryDto = new SiteQueryDto();
+        siteQueryDto.setStatus(1);
+        List<Site> siteAll = siteService.getSiteAll(siteQueryDto);
+        return ResponseEntity.ok(siteAll);
+    }
 }
