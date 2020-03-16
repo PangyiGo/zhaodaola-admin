@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.sise.zhaodaola.business.entity.Menu;
 import com.sise.zhaodaola.business.entity.Role;
 import com.sise.zhaodaola.business.mapper.RoleMapper;
+import com.sise.zhaodaola.business.service.LostService;
 import com.sise.zhaodaola.business.service.MenuService;
 import com.sise.zhaodaola.business.service.RoleService;
 import com.sise.zhaodaola.business.service.UserService;
@@ -41,6 +42,9 @@ class CoreApplicationTests {
 
     @Autowired
     private MenuService menuService;
+
+    @Autowired
+    private LostService lostService;
 
     @Test
     void contextLoads() {
@@ -119,7 +123,7 @@ class CoreApplicationTests {
     }
 
     @Test
-    void test10(){
+    void test10() {
         UserUpdateDto userUpdateDto = new UserUpdateDto();
         userUpdateDto.setUsername("1640129466");
         userUpdateDto.setRealName("郑敏明");
@@ -134,7 +138,16 @@ class CoreApplicationTests {
     }
 
     @Test
-    void test11(){
+    void test11() {
         userService.deleteUser(CollectionUtil.newArrayList(4));
+    }
+
+    @Test
+    void test12() {
+        //        LostFoundBasicDto lostFoundBasicDto = new LostFoundBasicDto();
+        //        lostFoundBasicDto.setTitle("sss");
+        //        lostFoundBasicDto.setType(1);
+        //
+        //        lostService.publishLost(lostFoundBasicDto);
     }
 }

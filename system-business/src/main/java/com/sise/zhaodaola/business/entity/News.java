@@ -41,7 +41,7 @@ public class News extends Model<News> implements Serializable {
 
     private Integer palcement;
 
-    private Long show;
+    private Long browse;
 
     private String image;
 

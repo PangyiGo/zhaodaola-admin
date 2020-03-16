@@ -22,4 +22,46 @@ public class DictManager {
     public static String show(Integer status) {
         return status.equals(1) ? "可见" : "隐藏";
     }
+
+    public static String lostStatus(Integer status) {
+        String res = "";
+        switch (status) {
+            case 1:
+                res = "寻找中";
+                break;
+            case 2:
+                res = "已寻回";
+                break;
+            case 3:
+                res = "不可见";
+                break;
+            case 4:
+                res = "已删除";
+                break;
+            default:
+                res = "其他";
+        }
+        return res;
+    }
+
+    public static String foundStatus(Integer status) {
+        String res = "";
+        switch (status) {
+            case 1:
+                res = "认领中";
+                break;
+            case 2:
+                res = "已认领";
+                break;
+            case 3:
+                res = "不可见";
+                break;
+            case 4:
+                res = "已删除";
+                break;
+            default:
+                res = "其他";
+        }
+        return res;
+    }
 }

@@ -1,19 +1,16 @@
 package com.sise.zhaodaola.core.lostAndfound;
 
-import com.sise.zhaodaola.business.service.PictureService;
+import com.sise.zhaodaola.business.service.LostService;
+import com.sise.zhaodaola.business.service.dto.LostFoundBasicDto;
 import com.sise.zhaodaola.tool.annotation.Log;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * User: PangYi
@@ -26,10 +23,10 @@ import java.util.List;
 @Slf4j
 public class LostController {
 
-    private PictureService pictureService;
+    private LostService lostService;
 
-    public LostController(PictureService pictureService) {
-        this.pictureService = pictureService;
+    public LostController(LostService lostService) {
+        this.lostService = lostService;
     }
 
     @Log("查询寻物列表")
@@ -39,10 +36,10 @@ public class LostController {
         return null;
     }
 
-    @Log("失物图片上传")
-    @PostMapping("/upload")
-    public ResponseEntity<Object> uploadImages(@RequestParam("file") MultipartFile[] files) {
-        List<String> list = pictureService.saveFile(Arrays.asList(files));
-        return ResponseEntity.ok(list);
+    @Log("寻物启事发布")
+    @PostMapping("/publish")
+    public ResponseEntity<Object> publishLost(@RequestBody LostFoundBasicDto lostFoundBasicDto) {
+        lostService.publishLost(lostFoundBasicDto);
+        return new ResponseEntity<>("寻物启事登记成功", HttpStatus.OK);
     }
 }

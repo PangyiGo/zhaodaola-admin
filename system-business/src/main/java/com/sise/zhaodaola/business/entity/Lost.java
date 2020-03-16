@@ -53,7 +53,7 @@ public class Lost extends Model<Lost> implements Serializable {
 
     private String images;
 
-    private long show;
+    private long browse;
 
     private String name;
 

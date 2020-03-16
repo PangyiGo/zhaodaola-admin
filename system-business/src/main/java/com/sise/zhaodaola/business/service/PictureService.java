@@ -1,7 +1,6 @@
 package com.sise.zhaodaola.business.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.sise.zhaodaola.business.entity.Announce;
 import com.sise.zhaodaola.business.entity.Picture;
 import org.springframework.web.multipart.MultipartFile;
 
