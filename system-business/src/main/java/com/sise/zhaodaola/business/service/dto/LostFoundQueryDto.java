@@ -17,7 +17,7 @@ public class LostFoundQueryDto implements Serializable {
 
     private int type;
 
-    private String strart;
+    private String start;
 
     private String end;
 

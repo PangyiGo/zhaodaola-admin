@@ -1,11 +1,11 @@
 package com.sise.zhaodaola.tool;
 
+import cn.hutool.core.date.DateUtil;
 import com.sise.zhaodaola.tool.utils.StringUtils;
-import org.apache.el.stream.Optional;
 
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @Author: PangYi
@@ -14,7 +14,16 @@ import java.util.stream.Stream;
 public class StreamTest {
 
     public static void main(String[] args) {
-        Stream<String> stringStream = Stream.of("a", "b", "cc", "dd", "11");
-        stringStream.map(String::length).forEach(System.out::println);
+        String time = "2019-12-31";
+
+        Date dateTime = DateUtil.parse(time);
+
+        System.out.println(DateUtil.beginOfDay(dateTime));
+
+        System.out.println(DateUtil.endOfDay(dateTime));
+
+        List<String> list = Arrays.asList(StringUtils.split("", ","));
+
+        System.out.println(list);
     }
 }

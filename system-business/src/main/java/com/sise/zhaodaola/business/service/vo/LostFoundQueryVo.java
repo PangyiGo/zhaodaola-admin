@@ -1,11 +1,11 @@
 package com.sise.zhaodaola.business.service.vo;
 
-import cn.hutool.core.date.DateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +19,7 @@ public class LostFoundQueryVo implements Serializable {
 
     private String uuid;
 
-    private String userId;
+    private Integer userId;
 
     // 用户名
     private String username;
@@ -34,7 +34,7 @@ public class LostFoundQueryVo implements Serializable {
     private String place;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private DateTime lostTime;
+    private LocalDateTime lostTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
@@ -43,11 +43,11 @@ public class LostFoundQueryVo implements Serializable {
     private LocalDateTime updateTime;
 
     // 失物图片名称列表
-    private List<String> imagesName;
+    private List<String> imagesName = new ArrayList<>(0);
 
     private long browse;
 
-    private long commont;
+    private long comment;
 
     private String name;
 

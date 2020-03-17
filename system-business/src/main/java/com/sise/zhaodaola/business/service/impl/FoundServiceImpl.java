@@ -1,7 +1,6 @@
 package com.sise.zhaodaola.business.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -44,7 +43,7 @@ public class FoundServiceImpl extends ServiceImpl<FoundMapper, Found> implements
         BeanUtil.copyProperties(lostFoundBasicDto, found);
         if (StringUtils.isNotBlank(lostFoundBasicDto.getLostTime()))
             try {
-                found.setLostTime(DateUtil.parse(lostFoundBasicDto.getLostTime(), DatePattern.NORM_DATE_PATTERN));
+                found.setLostTime(DateUtil.toLocalDateTime(DateUtil.parse(lostFoundBasicDto.getLostTime())));
             } catch (Exception e) {
                 throw new BadRequestException("时间格式化异常");
             }

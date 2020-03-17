@@ -9,10 +9,7 @@ import com.sise.zhaodaola.business.service.LostService;
 import com.sise.zhaodaola.business.service.MenuService;
 import com.sise.zhaodaola.business.service.RoleService;
 import com.sise.zhaodaola.business.service.UserService;
-import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
-import com.sise.zhaodaola.business.service.dto.UserDto;
-import com.sise.zhaodaola.business.service.dto.UserQueryDto;
-import com.sise.zhaodaola.business.service.dto.UserUpdateDto;
+import com.sise.zhaodaola.business.service.dto.*;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,10 +141,13 @@ class CoreApplicationTests {
 
     @Test
     void test12() {
-        //        LostFoundBasicDto lostFoundBasicDto = new LostFoundBasicDto();
-        //        lostFoundBasicDto.setTitle("sss");
-        //        lostFoundBasicDto.setType(1);
-        //
-        //        lostService.publishLost(lostFoundBasicDto);
+        LostFoundQueryDto lostFoundQueryDto = new LostFoundQueryDto();
+        lostFoundQueryDto.setStart("2019-12-21");
+        lostFoundQueryDto.setEnd("2020-01-01");
+        PageQueryCriteria queryCriteria = new PageQueryCriteria();
+
+        PageHelper listToPage = lostService.getListToPage(lostFoundQueryDto, queryCriteria);
+
+        System.out.println(listToPage);
     }
 }
