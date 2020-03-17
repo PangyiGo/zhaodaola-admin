@@ -1,6 +1,7 @@
 package com.sise.zhaodaola.business.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -139,6 +140,21 @@ public class LostServiceImpl extends ServiceImpl<LostMapper, Lost> implements Lo
         super.updateById(lost);
     }
 
+    @Override
+    public LostSingleUpdateDto getOne(Integer lostId) {
+        Lost lost = super.getById(lostId);
+        // copy
+        LostSingleUpdateDto singleUpdateDto = new LostSingleUpdateDto();
+        BeanUtil.copyProperties(lost, singleUpdateDto);
+        if (lost.getLostTime() != null)
+            singleUpdateDto.setLostTime(DateUtil.format(lost.getLostTime(), DatePattern.NORM_DATE_PATTERN));
+        if (StringUtils.isNotBlank(lost.getImages())) {
+            List<String> imagesUrl = Arrays.asList(StringUtils.split(lost.getImages(), ","));
+            singleUpdateDto.setImages(imagesUrl);
+        }
+        return singleUpdateDto;
+    }
+
     private List<LostFoundQueryVo> recode(List<Lost> lostList) {
         // result
         List<LostFoundQueryVo> lostFoundQueryVoList = new ArrayList<>(0);
@@ -179,8 +195,12 @@ public class LostServiceImpl extends ServiceImpl<LostMapper, Lost> implements Lo
             if (StringUtils.isNotBlank(lostFoundQueryDto.getUsername())) {
                 LambdaQueryWrapper<User> userWrapper = Wrappers.<User>lambdaQuery().like(User::getUsername, lostFoundQueryDto.getUsername()).select(User::getId);
                 List<User> userList = userService.list(userWrapper);
-                List<Integer> integers = userList.stream().map(User::getId).collect(Collectors.toList());
-                wrapper.in(Lost::getUserId, integers);
+                if (userList != null && userList.size() > 0) {
+                    List<Integer> integers = userList.stream().map(User::getId).collect(Collectors.toList());
+                    wrapper.in(Lost::getUserId, integers);
+                } else {
+                    wrapper.in(Lost::getUserId, -1);
+                }
             }
         }
         return wrapper;

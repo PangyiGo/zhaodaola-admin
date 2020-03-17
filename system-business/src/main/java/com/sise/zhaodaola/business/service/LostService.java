@@ -61,4 +61,12 @@ public interface LostService extends IService<Lost> {
      * 更新寻物启事信息
      */
     void updateLost(LostSingleUpdateDto lostSingleUpdateDto);
+
+    /**
+     * 获取单个寻物启事数据
+     *
+     * @param lostId /
+     * @return /
+     */
+    LostSingleUpdateDto getOne(Integer lostId);
 }
