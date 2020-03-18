@@ -107,6 +107,7 @@ public class LostServiceImpl extends ServiceImpl<LostMapper, Lost> implements Lo
             map.put("微信", lostFoundQueryVo.getWechat());
             map.put("创建时间", DateUtil.formatLocalDateTime(lostFoundQueryVo.getCreateTime()));
             map.put("更新时间", DateUtil.formatLocalDateTime(lostFoundQueryVo.getUpdateTime()));
+            map.put("物品状态", lostFoundQueryVo.getStatus());
             download.add(map);
         });
         FileUtils.downloadExcel(download, response);

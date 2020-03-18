@@ -14,8 +14,11 @@ import com.sise.zhaodaola.tool.utils.PageHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,10 +46,13 @@ class CoreApplicationTests {
     @Autowired
     private LostService lostService;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     @Test
     void contextLoads() {
-        String encode = passwordEncoder.encode("py1653@scse.com.cn");
-        System.out.println(encode);
+        ResponseEntity<String> exchange = restTemplate.exchange("http://www.nanhonghj.com:11112", HttpMethod.POST, null, String.class);
+        System.out.println(exchange);
     }
 
     @Test

@@ -64,4 +64,8 @@ public class DictManager {
         }
         return res;
     }
+
+    public static String foundType(Integer type) {
+        return type.equals(1) ? "个人认领" : "站点认领";
+    }
 }
