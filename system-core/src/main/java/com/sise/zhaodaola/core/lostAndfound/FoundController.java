@@ -1,14 +1,17 @@
 package com.sise.zhaodaola.core.lostAndfound;
 
 import com.sise.zhaodaola.business.service.FoundService;
-import com.sise.zhaodaola.business.service.dto.LostFoundBasicDto;
+import com.sise.zhaodaola.business.service.dto.*;
 import com.sise.zhaodaola.tool.annotation.Log;
+import com.sise.zhaodaola.tool.utils.PageHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * User: PangYi
@@ -31,5 +34,42 @@ public class FoundController {
     public ResponseEntity<Object> publishFound(@RequestBody LostFoundBasicDto lostFoundBasicDto) {
         foundService.publishLost(lostFoundBasicDto);
         return new ResponseEntity<>("认领启事登记成功", HttpStatus.OK);
+    }
+
+    @Log("认领启事数据查询")
+    @PreAuthorize("@auth.check('found:list')")
+    @PostMapping("/list")
+    public ResponseEntity<Object> getListToPage(FoundQueryDto foundQueryDto, PageQueryCriteria pageQueryCriteria) {
+        PageHelper listToPage = foundService.getListToPage(foundQueryDto, pageQueryCriteria);
+        return ResponseEntity.ok(listToPage);
+    }
+
+    @Log("认领数据导出")
+    @PreAuthorize("@auth.check('found:download')")
+    @PostMapping("/download")
+    public void download(FoundQueryDto foundQueryDto, HttpServletResponse response) throws IOException {
+        foundService.download(foundService.getAll(foundQueryDto), response);
+    }
+
+    @Log("认领启事删除")
+    @PreAuthorize("@auth.check('found:delete')")
+    @PostMapping("/delete")
+    public ResponseEntity<Object> deleteForIds(@RequestBody List<Integer> foundIds) {
+        foundService.deleteFound(foundIds);
+        return new ResponseEntity<>("认领启事删除成功", HttpStatus.OK);
+    }
+
+    @Log("查询认领启事")
+    @PostMapping("/getOne/{foundId}")
+    public ResponseEntity<Object> getOne(@PathVariable("foundId") Integer foundId) {
+        FoundSingleDto foundSingleDto = foundService.getOne(foundId);
+        return ResponseEntity.ok(foundSingleDto);
+    }
+
+    @Log("认领启事修改")
+    @PostMapping("/update")
+    public ResponseEntity<Object> update(@RequestBody FoundSingleDto foundSingleDto) {
+        foundService.updateFound(foundSingleDto);
+        return new ResponseEntity<>("修改成功", HttpStatus.OK);
     }
 }

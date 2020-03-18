@@ -127,6 +127,22 @@ public class FoundServiceImpl extends ServiceImpl<FoundMapper, Found> implements
         super.removeByIds(foundIds);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateFound(FoundSingleDto foundSingleDto) {
+        Found found = new Found();
+        BeanUtil.copyProperties(foundSingleDto, found);
+        if (StringUtils.isNotBlank(foundSingleDto.getLostTime())) {
+            found.setLostTime(DateUtil.toLocalDateTime(DateUtil.parse(foundSingleDto.getLostTime())));
+        }
+        if (ObjectUtil.isNotNull(foundSingleDto.getImages())) {
+            String imagesUrl = StringUtils.join(foundSingleDto.getImages(), ",");
+            found.setImages(imagesUrl);
+        }
+        found.setUpdateTime(LocalDateTime.now());
+        super.updateById(found);
+    }
+
     @Override
     public FoundSingleDto getOne(Integer foundId) {
         Found found = super.getById(foundId);
@@ -157,7 +173,7 @@ public class FoundServiceImpl extends ServiceImpl<FoundMapper, Found> implements
             }
             // found of type to site
             if (found.getContact() == 2) {
-                String address = siteService.getById(found.getContact()).getAddress();
+                String address = siteService.getById(found.getClaim()).getAddress();
                 foundQueryVo.setContactType(address);
             }
             foundQueryVo.setUsername(username);

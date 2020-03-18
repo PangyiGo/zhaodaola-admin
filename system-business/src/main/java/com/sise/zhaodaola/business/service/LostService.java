@@ -2,10 +2,7 @@ package com.sise.zhaodaola.business.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sise.zhaodaola.business.entity.Lost;
-import com.sise.zhaodaola.business.service.dto.LostFoundBasicDto;
-import com.sise.zhaodaola.business.service.dto.LostFoundQueryDto;
-import com.sise.zhaodaola.business.service.dto.LostSingleUpdateDto;
-import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
+import com.sise.zhaodaola.business.service.dto.*;
 import com.sise.zhaodaola.business.service.vo.LostFoundQueryVo;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 

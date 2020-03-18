@@ -65,4 +65,12 @@ public interface FoundService extends IService<Found> {
      * @return /
      */
     FoundSingleDto getOne(Integer foundId);
+
+
+    /**
+     * 修改认领启事信息
+     *
+     * @param foundSingleDto /
+     */
+    void updateFound(FoundSingleDto foundSingleDto);
 }
