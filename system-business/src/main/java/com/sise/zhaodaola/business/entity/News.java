@@ -33,6 +33,8 @@ public class News extends Model<News> implements Serializable {
 
     private String title;
 
+    private String remark;
+
     private String content;
 
     private String author;
