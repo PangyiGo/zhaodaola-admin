@@ -23,6 +23,10 @@ public class DictManager {
         return status.equals(1) ? "可见" : "隐藏";
     }
 
+    public static String placement(Integer status) {
+        return status.equals(1) ? "置顶" : "普通";
+    }
+
     public static String lostStatus(Integer status) {
         String res = "";
         switch (status) {

@@ -39,7 +39,7 @@ public class News extends Model<News> implements Serializable {
 
     private String dept;
 
-    private Integer palcement;
+    private Integer placement;
 
     private Long browse;
 

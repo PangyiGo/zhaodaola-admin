@@ -1,12 +1,39 @@
 package com.sise.zhaodaola.business.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.sise.zhaodaola.business.entity.Announce;
 import com.sise.zhaodaola.business.entity.News;
+import com.sise.zhaodaola.business.service.dto.NewsQueryDto;
+import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
+import com.sise.zhaodaola.tool.utils.PageHelper;
+
+import java.util.List;
 
 /**
  * @Author: PangYi
  * @Date 2020/3/610:46 下午
  */
 public interface NewsService extends IService<News> {
+
+    /**
+     * 发布校园资讯
+     *
+     * @param news /
+     */
+    void publishNews(News news);
+
+    /**
+     * 查询校园资讯列表
+     *
+     * @param newsQueryDto  /
+     * @param queryCriteria /
+     * @return /
+     */
+    PageHelper getListNews(NewsQueryDto newsQueryDto, PageQueryCriteria queryCriteria);
+
+    /**
+     * 删除校园资讯
+     *
+     * @param newsIds /
+     */
+    void delete(List<Integer> newsIds);
 }
