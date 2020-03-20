@@ -64,6 +64,23 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
         super.removeByIds(newsIds);
     }
 
+    @Override
+    public NewsQueryVo viewNews(Integer newsId) {
+        News news = super.getById(newsId);
+        NewsQueryVo newsQueryVo = new NewsQueryVo();
+        BeanUtil.copyProperties(news, newsQueryVo);
+        String newsType = newsTypeService.getById(news.getType()).getName();
+        newsQueryVo.setType(newsType);
+        newsQueryVo.setPlacement(DictManager.placement(news.getPlacement()));
+        return newsQueryVo;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void update(News news) {
+        super.updateById(news);
+    }
+
     private List<NewsQueryVo> recode(List<News> newsList) {
         List<NewsQueryVo> newsQueryVoList = new ArrayList<>(0);
         newsList.forEach(news -> {

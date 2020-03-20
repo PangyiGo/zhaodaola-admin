@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.sise.zhaodaola.business.entity.News;
 import com.sise.zhaodaola.business.service.dto.NewsQueryDto;
 import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
+import com.sise.zhaodaola.business.service.vo.NewsQueryVo;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 
 import java.util.List;
@@ -36,4 +37,19 @@ public interface NewsService extends IService<News> {
      * @param newsIds /
      */
     void delete(List<Integer> newsIds);
+
+    /**
+     * 查看单个校园资讯
+     *
+     * @param newsId /
+     * @return /
+     */
+    NewsQueryVo viewNews(Integer newsId);
+
+    /**
+     * 修改校园资讯
+     *
+     * @param news /
+     */
+    void update(News news);
 }
