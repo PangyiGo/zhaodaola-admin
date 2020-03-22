@@ -46,6 +46,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
     public void publishNews(News news) {
         news.setStatus(1);
         news.setCreateTime(LocalDateTime.now());
+        news.setUpdateTime(LocalDateTime.now());
         news.setUuid(IdUtil.simpleUUID());
         super.save(news);
     }
@@ -78,7 +79,13 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(News news) {
+        news.setUpdateTime(LocalDateTime.now());
         super.updateById(news);
+    }
+
+    @Override
+    public News edtior(Integer newsId) {
+        return super.getById(newsId);
     }
 
     private List<NewsQueryVo> recode(List<News> newsList) {

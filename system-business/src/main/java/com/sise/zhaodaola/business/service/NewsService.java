@@ -52,4 +52,12 @@ public interface NewsService extends IService<News> {
      * @param news /
      */
     void update(News news);
+
+    /**
+     * 校园资讯编辑
+     *
+     * @param newsId /
+     * @return /
+     */
+    News edtior(Integer newsId);
 }

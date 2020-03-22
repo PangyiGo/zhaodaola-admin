@@ -62,6 +62,12 @@ public class NewsController {
         return ResponseEntity.ok(newsQueryVo);
     }
 
+    @PostMapping("/edtior/{newsId}")
+    public ResponseEntity<Object> getEdtior(@PathVariable("newsId") Integer newsId) {
+        News news = newsService.edtior(newsId);
+        return ResponseEntity.ok(news);
+    }
+
     @Log("校园资讯修改")
     @PreAuthorize("@auth.check('news:update')")
     @PostMapping("/update")
