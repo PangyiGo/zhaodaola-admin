@@ -6,7 +6,6 @@ import com.sise.zhaodaola.business.service.CategoryService;
 import com.sise.zhaodaola.business.service.dto.CategoryQueryDto;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -15,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @Date 2020/3/1411:03 下午
  */
 @SpringBootTest
-public class CategoryTests {
+class CategoryTests {
 
     @Autowired
     private CategoryService categoryService;

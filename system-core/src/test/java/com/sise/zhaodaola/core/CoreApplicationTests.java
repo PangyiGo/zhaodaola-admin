@@ -10,6 +10,7 @@ import com.sise.zhaodaola.business.service.MenuService;
 import com.sise.zhaodaola.business.service.RoleService;
 import com.sise.zhaodaola.business.service.UserService;
 import com.sise.zhaodaola.business.service.dto.*;
+import com.sise.zhaodaola.business.service.vo.MenusVo;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 class CoreApplicationTests {
@@ -155,5 +154,25 @@ class CoreApplicationTests {
         PageHelper listToPage = lostService.getListToPage(lostFoundQueryDto, queryCriteria);
 
         System.out.println(listToPage);
+    }
+
+    @Test
+    void test13() {
+        List<Menu> menuList = menuService.list();
+        List<MenusVo> menusVoList = buildMenus(0, menuList);
+
+        System.out.println(menusVoList);
+    }
+
+    private List<MenusVo> buildMenus(Integer parentId, List<Menu> menuList) {
+        List<MenusVo> menusVoList = new ArrayList<>();
+        List<Menu> menus = menuList.stream().filter(menu -> menu.getPid().equals(parentId)).collect(Collectors.toList());
+        menus.forEach(menu -> {
+            MenusVo menusVo = new MenusVo();
+            BeanUtil.copyProperties(menu, menusVo);
+            menusVo.setChildren(buildMenus(menu.getId(), menuList));
+            menusVoList.add(menusVo);
+        });
+        return menusVoList;
     }
 }

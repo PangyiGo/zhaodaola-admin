@@ -1,4 +1,4 @@
-package com.sise.zhaodaola.core.logging.aop;
+package com.sise.zhaodaola.core.config;
 
 import com.sise.zhaodaola.business.entity.Log;
 import com.sise.zhaodaola.business.service.LogService;
@@ -28,7 +28,7 @@ public class LogAspect {
 
     private LogService logSerivce;
 
-    ThreadLocal<Long> currentTime = new ThreadLocal<>();
+    private ThreadLocal<Long> currentTime = new ThreadLocal<>();
 
     public LogAspect(LogService logSerivce) {
         this.logSerivce = logSerivce;
