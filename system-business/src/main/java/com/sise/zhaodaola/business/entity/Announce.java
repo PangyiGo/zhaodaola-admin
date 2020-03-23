@@ -37,7 +37,7 @@ public class Announce extends Model<Announce> implements Serializable {
 
     private String username;
 
-    private Long browse;
+    private long browse;
 
     private Integer status;
 
