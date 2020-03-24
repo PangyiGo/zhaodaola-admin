@@ -19,6 +19,7 @@ import com.sise.zhaodaola.business.service.vo.FoundQueryVo;
 import com.sise.zhaodaola.tool.dict.DictManager;
 import com.sise.zhaodaola.tool.exception.BadRequestException;
 import com.sise.zhaodaola.tool.utils.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,20 +38,17 @@ import java.util.stream.Collectors;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class FoundServiceImpl extends ServiceImpl<FoundMapper, Found> implements FoundService {
 
+    @Autowired
     private UserService userService;
 
+    @Autowired
     private CommentService commentService;
 
+    @Autowired
     private CategoryService categoryService;
 
+    @Autowired
     private SiteService siteService;
-
-    public FoundServiceImpl(UserService userService, CommentService commentService, CategoryService categoryService, SiteService siteService) {
-        this.userService = userService;
-        this.commentService = commentService;
-        this.categoryService = categoryService;
-        this.siteService = siteService;
-    }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -141,6 +139,12 @@ public class FoundServiceImpl extends ServiceImpl<FoundMapper, Found> implements
         }
         found.setUpdateTime(LocalDateTime.now());
         super.updateById(found);
+    }
+
+    @Override
+    public Found getByUuid(String uuid) {
+        LambdaQueryWrapper<Found> wrapper = Wrappers.<Found>lambdaQuery().eq(Found::getUuid, uuid);
+        return super.getOne(wrapper);
     }
 
     @Override

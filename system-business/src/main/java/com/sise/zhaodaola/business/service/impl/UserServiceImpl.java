@@ -24,6 +24,7 @@ import com.sise.zhaodaola.tool.dict.DictManager;
 import com.sise.zhaodaola.tool.exception.BadRequestException;
 import com.sise.zhaodaola.tool.exception.EntityNotFoundException;
 import com.sise.zhaodaola.tool.utils.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -53,9 +54,12 @@ import java.util.stream.Collectors;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    private RoleMapper roleMapper;
-    private UserRolesService userRolesService;
-    private PasswordEncoder passwordEncoder;
+    private final RoleMapper roleMapper;
+    private final UserRolesService userRolesService;
+    private final PasswordEncoder passwordEncoder;
+
+    @Value("${file.avatar}")
+    private String avatar;
 
     public UserServiceImpl(RoleMapper roleMapper, UserRolesService userRolesService, PasswordEncoder passwordEncoder) {
         this.roleMapper = roleMapper;
@@ -235,5 +239,38 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 }
             }
         });
+    }
+
+    @CacheEvict(allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateAvatar(MultipartFile multipartFile) {
+        // 获取当前用户名
+        String username = SecurityUtils.getUsername();
+        // 保存头像
+        File file = FileUtils.upload(multipartFile, avatar);
+        assert file != null;
+        // 更新
+        LambdaUpdateWrapper<User> wrapper = Wrappers.<User>lambdaUpdate().set(User::getAvatar, file.getName()).eq(User::getUsername, username);
+        super.update(wrapper);
+    }
+
+    @CacheEvict(allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updatePassword(String newPassword) {
+        // 获取当前用户名
+        String username = SecurityUtils.getUsername();
+        // 更新
+        LambdaUpdateWrapper<User> wrapper = Wrappers.<User>lambdaUpdate().set(User::getPassword, newPassword).eq(User::getUsername, username);
+        super.update(wrapper);
+    }
+
+    @CacheEvict(allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateUserInfo(User user) {
+        user.setUpdateTime(LocalDateTime.now());
+        super.updateById(user);
     }
 }

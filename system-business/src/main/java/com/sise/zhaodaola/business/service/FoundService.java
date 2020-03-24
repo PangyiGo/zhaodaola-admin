@@ -73,4 +73,12 @@ public interface FoundService extends IService<Found> {
      * @param foundSingleDto /
      */
     void updateFound(FoundSingleDto foundSingleDto);
+
+    /**
+     * 查询
+     *
+     * @param uuid /
+     * @return /
+     */
+    Found getByUuid(String uuid);
 }

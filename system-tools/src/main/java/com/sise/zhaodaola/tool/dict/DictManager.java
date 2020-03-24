@@ -23,6 +23,10 @@ public class DictManager {
         return status.equals(1) ? "可见" : "隐藏";
     }
 
+    public static String comment(Integer status) {
+        return status.equals(1) ? "寻物帖子评论" : "招领帖子评论";
+    }
+
     public static String placement(Integer status) {
         return status.equals(1) ? "置顶" : "普通";
     }

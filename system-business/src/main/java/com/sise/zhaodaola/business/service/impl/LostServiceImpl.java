@@ -22,6 +22,7 @@ import com.sise.zhaodaola.business.service.vo.LostFoundQueryVo;
 import com.sise.zhaodaola.tool.dict.DictManager;
 import com.sise.zhaodaola.tool.exception.BadRequestException;
 import com.sise.zhaodaola.tool.utils.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,17 +41,14 @@ import java.util.stream.Collectors;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class LostServiceImpl extends ServiceImpl<LostMapper, Lost> implements LostService {
 
-    private UserService userService;
+    @Autowired
+    private  UserService userService;
 
-    private CommentService commentService;
+    @Autowired
+    private  CommentService commentService;
 
-    private CategoryService categoryService;
-
-    public LostServiceImpl(UserService userService, CommentService commentService, CategoryService categoryService) {
-        this.userService = userService;
-        this.commentService = commentService;
-        this.categoryService = categoryService;
-    }
+    @Autowired
+    private  CategoryService categoryService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -154,6 +152,12 @@ public class LostServiceImpl extends ServiceImpl<LostMapper, Lost> implements Lo
             singleUpdateDto.setImages(imagesUrl);
         }
         return singleUpdateDto;
+    }
+
+    @Override
+    public Lost getByUuid(String uuid) {
+        LambdaQueryWrapper<Lost> wrapper = Wrappers.<Lost>lambdaQuery().eq(Lost::getUuid, uuid);
+        return super.getOne(wrapper);
     }
 
     private List<LostFoundQueryVo> recode(List<Lost> lostList) {

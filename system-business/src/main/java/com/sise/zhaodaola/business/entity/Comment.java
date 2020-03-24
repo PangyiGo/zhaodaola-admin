@@ -33,6 +33,8 @@ public class Comment extends Model<Comment> implements Serializable {
 
     private String content;
 
+    private int type;
+
     private Integer userId;
 
     private Integer replayId;

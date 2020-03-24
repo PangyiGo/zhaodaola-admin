@@ -66,4 +66,12 @@ public interface LostService extends IService<Lost> {
      * @return /
      */
     LostSingleUpdateDto getOne(Integer lostId);
+
+    /**
+     * 查询
+     *
+     * @param uuid /
+     * @return /
+     */
+    Lost getByUuid(String uuid);
 }

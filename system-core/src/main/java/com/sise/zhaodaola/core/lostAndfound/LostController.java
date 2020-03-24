@@ -8,6 +8,7 @@ import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
 import com.sise.zhaodaola.tool.annotation.Log;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,11 +29,9 @@ import java.util.List;
 @Slf4j
 public class LostController {
 
+    @Autowired
     private LostService lostService;
 
-    public LostController(LostService lostService) {
-        this.lostService = lostService;
-    }
 
     @Log("查询寻物列表")
     @PreAuthorize("@auth.check('lost:list')")

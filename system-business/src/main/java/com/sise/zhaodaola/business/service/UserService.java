@@ -86,4 +86,25 @@ public interface UserService extends IService<User> {
      * @param file 文件
      */
     void importUser(MultipartFile file);
+
+    /**
+     * 修改头像
+     *
+     * @param file /
+     */
+    void updateAvatar(MultipartFile file);
+
+    /**
+     * 更新密码
+     *
+     * @param newPassword /
+     */
+    void updatePassword(String newPassword);
+
+    /**
+     * 修改用户基本信息
+     *
+     * @param user /
+     */
+    void updateUserInfo(User user);
 }

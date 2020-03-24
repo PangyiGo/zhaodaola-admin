@@ -1,19 +1,24 @@
 package com.sise.zhaodaola.core.user;
 
+import cn.hutool.crypto.asymmetric.KeyType;
+import cn.hutool.crypto.asymmetric.RSA;
+import com.sise.zhaodaola.business.entity.User;
 import com.sise.zhaodaola.business.service.UserService;
 import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
+import com.sise.zhaodaola.business.service.dto.UserDto;
 import com.sise.zhaodaola.business.service.dto.UserQueryDto;
 import com.sise.zhaodaola.business.service.dto.UserUpdateDto;
+import com.sise.zhaodaola.business.service.impl.UserPassDto;
 import com.sise.zhaodaola.tool.annotation.Log;
+import com.sise.zhaodaola.tool.exception.BadRequestException;
 import com.sise.zhaodaola.tool.utils.PageHelper;
+import com.sise.zhaodaola.tool.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -33,8 +38,11 @@ public class UserController {
 
     private UserService userService;
 
-    public UserController(UserService userService) {
+    private PasswordEncoder passwordEncoder;
+
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Log("查询用户")
@@ -93,5 +101,32 @@ public class UserController {
     public ResponseEntity<Object> importUser(MultipartFile file) {
         userService.importUser(file);
         return ResponseEntity.ok("批量导入数据成功");
+    }
+
+    @PostMapping(value = "/updateAvatar")
+    public ResponseEntity<Object> updateAvatar(@RequestParam MultipartFile file) {
+        userService.updateAvatar(file);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Log("修改用户密码")
+    @PostMapping(value = "/updatePass")
+    public ResponseEntity<Object> updatePass(@RequestBody UserPassDto userPassDto) {
+        // 密码加密
+        UserDto user = userService.findByUsername(SecurityUtils.getUsername());
+        if (!passwordEncoder.matches(userPassDto.getOldPass(), user.getPassword())) {
+            throw new BadRequestException("修改失败，旧密码错误");
+        }
+        if (passwordEncoder.matches(userPassDto.getNewPass(), user.getPassword())) {
+            throw new BadRequestException("新密码不能与旧密码相同");
+        }
+        userService.updatePassword(passwordEncoder.encode(userPassDto.getNewPass()));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/updateInfo")
+    public ResponseEntity<Object> updateUserInfo(@RequestBody User user){
+        userService.updateUserInfo(user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
