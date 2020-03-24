@@ -77,8 +77,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateRole(Role role) {
-        if (findByName(role.getName()) != null)
-            throw new BadRequestException("修改角色名称不允许重复");
         super.updateById(role);
     }
 
@@ -94,6 +92,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         if (ObjectUtils.isNotEmpty(basicQueryDto)) {
             wrapper.and(StringUtils.isNoneBlank(basicQueryDto.getWord()), q -> {
                 q.or().like(Role::getName, basicQueryDto.getWord());
+                q.or().like(Role::getRemark, basicQueryDto.getWord());
             });
             if (StringUtils.isNotBlank(basicQueryDto.getStart()) && StringUtils.isNotBlank(basicQueryDto.getEnd()))
                 wrapper.between(Role::getCreateTime, DateTimeUtils.dateTime(basicQueryDto.getStart(), DatePattern.NORM_DATETIME_PATTERN), DateTimeUtils.dateTime(basicQueryDto.getEnd(), DatePattern.NORM_DATETIME_PATTERN));
