@@ -14,6 +14,7 @@ import java.util.List;
  */
 @Data
 public class MenusVo implements Serializable {
+
     private Integer id;
 
     private String title;
