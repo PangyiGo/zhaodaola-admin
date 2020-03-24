@@ -1,6 +1,7 @@
 package com.sise.zhaodaola.business.service.impl;
 
 import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
@@ -33,6 +34,7 @@ public class AnnouceServiceImpl extends ServiceImpl<AnnounceMapper, Announce> im
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void createAnnounce(Announce announce) {
+        announce.setUuid(IdUtil.simpleUUID());
         announce.setUsername(SecurityUtils.getUsername());
         announce.setCreateTime(LocalDateTime.now());
         announce.setUpdateTime(LocalDateTime.now());

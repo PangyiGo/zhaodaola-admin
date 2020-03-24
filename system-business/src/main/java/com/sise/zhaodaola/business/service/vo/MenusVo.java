@@ -9,14 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User: PangYi
- * Date: 2020-03-23
- * Time: 15:49
- * Description:
+ * @Author: PangYi
+ * @Date 2020/3/238:22 下午
  */
 @Data
 public class MenusVo implements Serializable {
-
     private Integer id;
 
     private String title;
@@ -37,4 +34,5 @@ public class MenusVo implements Serializable {
     private LocalDateTime createTime;
 
     private List<MenusVo> children = new ArrayList<>(0);
+
 }
