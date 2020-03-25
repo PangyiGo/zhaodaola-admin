@@ -5,6 +5,8 @@ import com.sise.zhaodaola.business.service.dto.LostFoundBasicDto;
 import com.sise.zhaodaola.business.service.dto.LostFoundQueryDto;
 import com.sise.zhaodaola.business.service.dto.LostSingleUpdateDto;
 import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
+import com.sise.zhaodaola.business.service.vo.LostFoundQueryVo;
+import com.sise.zhaodaola.tool.annotation.AnonymousAccess;
 import com.sise.zhaodaola.tool.annotation.Log;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -74,5 +76,12 @@ public class LostController {
     public ResponseEntity<Object> update(@RequestBody LostSingleUpdateDto lostSingleUpdateDto) {
         lostService.updateLost(lostSingleUpdateDto);
         return new ResponseEntity<>("修改成功", HttpStatus.OK);
+    }
+
+    @AnonymousAccess
+    @PostMapping("/index")
+    public ResponseEntity<Object> getLostIndex() {
+        List<LostFoundQueryVo> lostIndex = lostService.getLostIndex();
+        return ResponseEntity.ok(lostIndex);
     }
 }

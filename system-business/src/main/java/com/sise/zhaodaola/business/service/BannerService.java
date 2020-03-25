@@ -51,4 +51,10 @@ public interface BannerService extends IService<Banner> {
      * @return /
      */
     Banner getOne(Integer bannerId);
+
+    /**
+     * 首页展示轮播图
+     * @return /
+     */
+    List<Banner> getBanners();
 }

@@ -74,4 +74,11 @@ public interface LostService extends IService<Lost> {
      * @return /
      */
     Lost getByUuid(String uuid);
+
+    /**
+     * 获取首页寻取启事
+     *
+     * @return /
+     */
+    List<LostFoundQueryVo> getLostIndex();
 }

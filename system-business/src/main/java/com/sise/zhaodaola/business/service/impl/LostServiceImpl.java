@@ -42,13 +42,13 @@ import java.util.stream.Collectors;
 public class LostServiceImpl extends ServiceImpl<LostMapper, Lost> implements LostService {
 
     @Autowired
-    private  UserService userService;
+    private UserService userService;
 
     @Autowired
-    private  CommentService commentService;
+    private CommentService commentService;
 
     @Autowired
-    private  CategoryService categoryService;
+    private CategoryService categoryService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -160,6 +160,15 @@ public class LostServiceImpl extends ServiceImpl<LostMapper, Lost> implements Lo
         return super.getOne(wrapper);
     }
 
+    @Override
+    public List<LostFoundQueryVo> getLostIndex() {
+        LostFoundQueryDto lostFoundQueryDto = new LostFoundQueryDto();
+        lostFoundQueryDto.setStatus(1);
+        Page<Lost> lostPage = new Page<>(1, 8);
+        Page<Lost> page = super.page(lostPage, wrapper(lostFoundQueryDto));
+        return recode(page.getRecords());
+    }
+
     private List<LostFoundQueryVo> recode(List<Lost> lostList) {
         // result
         List<LostFoundQueryVo> lostFoundQueryVoList = new ArrayList<>(0);
@@ -208,6 +217,7 @@ public class LostServiceImpl extends ServiceImpl<LostMapper, Lost> implements Lo
                 }
             }
         }
+        wrapper.orderByDesc(Lost::getCreateTime);
         return wrapper;
     }
 }

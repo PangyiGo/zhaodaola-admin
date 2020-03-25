@@ -4,16 +4,14 @@ import com.sise.zhaodaola.business.entity.Banner;
 import com.sise.zhaodaola.business.service.BannerService;
 import com.sise.zhaodaola.business.service.dto.BasicQueryDto;
 import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
+import com.sise.zhaodaola.tool.annotation.AnonymousAccess;
 import com.sise.zhaodaola.tool.annotation.Log;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -70,5 +68,11 @@ public class BannerController {
     public ResponseEntity<Object> getOne(@PathVariable("bannerId") Integer bannerId) {
         Banner banner = bannerService.getOne(bannerId);
         return ResponseEntity.ok(banner);
+    }
+
+    @PostMapping("/show")
+    @AnonymousAccess
+    public ResponseEntity<Object> getBanners() {
+        return ResponseEntity.ok(bannerService.getBanners());
     }
 }

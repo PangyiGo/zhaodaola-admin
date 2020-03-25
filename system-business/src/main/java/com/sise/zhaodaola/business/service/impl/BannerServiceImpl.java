@@ -89,6 +89,14 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner> impleme
         return super.getById(bannerId);
     }
 
+    @Override
+    public List<Banner> getBanners() {
+        BasicQueryDto basicQueryDto = new BasicQueryDto();
+        basicQueryDto.setCategory(1);
+        basicQueryDto.setStatus(1);
+        return super.list(wrapper(basicQueryDto));
+    }
+
     private LambdaQueryWrapper<Banner> wrapper(BasicQueryDto basicQueryDto) {
         LambdaQueryWrapper<Banner> wrapper = Wrappers.<Banner>lambdaQuery();
         if (ObjectUtils.isNotEmpty(basicQueryDto)) {
@@ -100,6 +108,7 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner> impleme
             if (StringUtils.isNotBlank(basicQueryDto.getStart()) && StringUtils.isNotBlank(basicQueryDto.getEnd()))
                 wrapper.between(Banner::getCreateTime, DateTimeUtils.dateTime(basicQueryDto.getStart(), DatePattern.NORM_DATETIME_PATTERN), DateTimeUtils.dateTime(basicQueryDto.getEnd(), DatePattern.NORM_DATETIME_PATTERN));
         }
+        wrapper.orderByDesc(Banner::getCreateTime);
         return wrapper;
     }
 }
