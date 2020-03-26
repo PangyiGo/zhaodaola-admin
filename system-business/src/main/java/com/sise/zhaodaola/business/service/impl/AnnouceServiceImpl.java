@@ -66,6 +66,15 @@ public class AnnouceServiceImpl extends ServiceImpl<AnnounceMapper, Announce> im
         return super.getById(announceId);
     }
 
+    @Override
+    public List<Announce> showIndex() {
+        Page<Announce> announcePage = new Page<>(1, 10);
+        BasicQueryDto basicQueryDto = new BasicQueryDto();
+        basicQueryDto.setStatus(1);
+        Page<Announce> page = super.page(announcePage, wrapper(basicQueryDto));
+        return page.getRecords();
+    }
+
     private LambdaQueryWrapper<Announce> wrapper(BasicQueryDto basicQueryDto) {
         LambdaQueryWrapper<Announce> wrapper = Wrappers.<Announce>lambdaQuery();
         if (ObjectUtils.isNotEmpty(basicQueryDto)) {
@@ -77,6 +86,7 @@ public class AnnouceServiceImpl extends ServiceImpl<AnnounceMapper, Announce> im
             if (StringUtils.isNotBlank(basicQueryDto.getStart()) && StringUtils.isNotBlank(basicQueryDto.getEnd()))
                 wrapper.between(Announce::getCreateTime, DateTimeUtils.dateTime(basicQueryDto.getStart(), DatePattern.NORM_DATETIME_PATTERN), DateTimeUtils.dateTime(basicQueryDto.getEnd(), DatePattern.NORM_DATETIME_PATTERN));
         }
+        wrapper.orderByDesc(Announce::getCreateTime);
         return wrapper;
     }
 }

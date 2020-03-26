@@ -5,6 +5,7 @@ import com.sise.zhaodaola.business.service.NewsService;
 import com.sise.zhaodaola.business.service.dto.NewsQueryDto;
 import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
 import com.sise.zhaodaola.business.service.vo.NewsQueryVo;
+import com.sise.zhaodaola.tool.annotation.AnonymousAccess;
 import com.sise.zhaodaola.tool.annotation.Log;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,13 @@ public class NewsController {
     public ResponseEntity<Object> getList(NewsQueryDto newsQueryDto, PageQueryCriteria queryCriteria) {
         PageHelper pageHelper = newsService.getListNews(newsQueryDto, queryCriteria);
         return ResponseEntity.ok(pageHelper);
+    }
+
+    @PostMapping("/showIndex")
+    @AnonymousAccess
+    public ResponseEntity<Object> getListShow() {
+        List<NewsQueryVo> newsQueryVos = newsService.showIndex();
+        return ResponseEntity.ok(newsQueryVos);
     }
 
     @Log("校园资讯删除")

@@ -156,6 +156,16 @@ public class FoundServiceImpl extends ServiceImpl<FoundMapper, Found> implements
         return recode(page.getRecords());
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public FoundQueryVo showFoundOne(Integer id) {
+        Found found = super.getById(id);
+        if (found == null) return new FoundQueryVo();
+        found.setBrowse(found.getBrowse() + 1);
+        super.updateById(found);
+        return single(found);
+    }
+
     @Override
     public FoundSingleDto getOne(Integer foundId) {
         Found found = super.getById(foundId);
@@ -174,42 +184,45 @@ public class FoundServiceImpl extends ServiceImpl<FoundMapper, Found> implements
     private List<FoundQueryVo> recode(List<Found> foundList) {
         List<FoundQueryVo> foundQueryVoList = new ArrayList<>(0);
         foundList.forEach(found -> {
-
-            FoundQueryVo foundQueryVo = new FoundQueryVo();
-            BeanUtil.copyProperties(found, foundQueryVo);
-
-            // select username and count of comment
-            User user = userService.getById(found.getUserId());
-            String username = user.getUsername();
-            String nickname = user.getNickName();
-            String avatar = user.getAvatar();
-
-            foundQueryVo.setUsername(username);
-            foundQueryVo.setNickName(nickname);
-            foundQueryVo.setAvatar(avatar);
-
-            int count = commentService.count(Wrappers.<Comment>lambdaQuery().eq(Comment::getPostCode, found.getUuid()));
-            String typeName = categoryService.getById(found.getType()).getName();
-            if (found.getOwner() != null) {
-                String owner = userService.getById(found.getOwner()).getUsername();
-                foundQueryVo.setFoundUser(owner);
-            }
-            // found of type to site
-            if (found.getContact() == 2) {
-                String address = siteService.getById(found.getClaim()).getAddress();
-                foundQueryVo.setContactType(address);
-            }
-            foundQueryVo.setUsername(username);
-            foundQueryVo.setComment(count);
-            foundQueryVo.setType(typeName);
-            foundQueryVo.setStatus(DictManager.foundStatus(found.getStatus()));
-            if (StringUtils.isNotBlank(found.getImages())) {
-                List<String> imagesUrl = Arrays.asList(StringUtils.split(found.getImages(), ","));
-                foundQueryVo.setImagesName(imagesUrl);
-            }
-            foundQueryVoList.add(foundQueryVo);
+            foundQueryVoList.add(single(found));
         });
         return foundQueryVoList;
+    }
+
+    private FoundQueryVo single(Found found) {
+        FoundQueryVo foundQueryVo = new FoundQueryVo();
+        BeanUtil.copyProperties(found, foundQueryVo);
+
+        // select username and count of comment
+        User user = userService.getById(found.getUserId());
+        String username = user.getUsername();
+        String nickname = user.getNickName();
+        String avatar = user.getAvatar();
+
+        foundQueryVo.setUsername(username);
+        foundQueryVo.setNickName(nickname);
+        foundQueryVo.setAvatar(avatar);
+
+        int count = commentService.count(Wrappers.<Comment>lambdaQuery().eq(Comment::getPostCode, found.getUuid()));
+        String typeName = categoryService.getById(found.getType()).getName();
+        if (found.getOwner() != null) {
+            String owner = userService.getById(found.getOwner()).getUsername();
+            foundQueryVo.setFoundUser(owner);
+        }
+        // found of type to site
+        if (found.getContact() == 2) {
+            String address = siteService.getById(found.getClaim()).getAddress();
+            foundQueryVo.setContactType(address);
+        }
+        foundQueryVo.setUsername(username);
+        foundQueryVo.setComment(count);
+        foundQueryVo.setType(typeName);
+        foundQueryVo.setStatus(DictManager.foundStatus(found.getStatus()));
+        if (StringUtils.isNotBlank(found.getImages())) {
+            List<String> imagesUrl = Arrays.asList(StringUtils.split(found.getImages(), ","));
+            foundQueryVo.setImagesName(imagesUrl);
+        }
+        return foundQueryVo;
     }
 
     private LambdaQueryWrapper<Found> wrapper(FoundQueryDto foundQueryDto) {

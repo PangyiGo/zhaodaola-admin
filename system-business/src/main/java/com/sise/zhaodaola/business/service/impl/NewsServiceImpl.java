@@ -88,6 +88,15 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
         return super.getById(newsId);
     }
 
+    @Override
+    public List<NewsQueryVo> showIndex() {
+        NewsQueryDto newsQueryDto = new NewsQueryDto();
+        newsQueryDto.setStatus(1);
+        Page<News> newsPage = new Page<>(1, 10);
+        Page<News> resultPage = super.page(newsPage, wrapper(newsQueryDto));
+        return recode(resultPage.getRecords());
+    }
+
     private List<NewsQueryVo> recode(List<News> newsList) {
         List<NewsQueryVo> newsQueryVoList = new ArrayList<>(0);
         newsList.forEach(news -> {

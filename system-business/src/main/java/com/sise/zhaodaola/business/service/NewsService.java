@@ -60,4 +60,11 @@ public interface NewsService extends IService<News> {
      * @return /
      */
     News edtior(Integer newsId);
+
+    /**
+     * 首页显示
+     *
+     * @return /
+     */
+    List<NewsQueryVo> showIndex();
 }

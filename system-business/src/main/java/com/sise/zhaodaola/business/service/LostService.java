@@ -81,4 +81,12 @@ public interface LostService extends IService<Lost> {
      * @return /
      */
     List<LostFoundQueryVo> getLostIndex();
+
+    /**
+     * 查看寻物启事信息
+     *
+     * @param id /
+     * @return /
+     */
+    LostFoundQueryVo showLostOne(Integer id);
 }

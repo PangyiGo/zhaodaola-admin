@@ -51,4 +51,11 @@ public interface AnnounceService extends IService<Announce> {
      * @return /
      */
     Announce getOne(Integer announceId);
+
+    /**
+     * 首页展示
+     *
+     * @return /
+     */
+    List<Announce> showIndex();
 }

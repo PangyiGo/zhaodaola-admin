@@ -6,6 +6,7 @@ import com.sise.zhaodaola.business.service.dto.FoundSingleDto;
 import com.sise.zhaodaola.business.service.dto.LostFoundBasicDto;
 import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
 import com.sise.zhaodaola.business.service.vo.FoundQueryVo;
+import com.sise.zhaodaola.business.service.vo.LostFoundQueryVo;
 import com.sise.zhaodaola.tool.annotation.AnonymousAccess;
 import com.sise.zhaodaola.tool.annotation.Log;
 import com.sise.zhaodaola.tool.utils.PageHelper;
@@ -41,6 +42,7 @@ public class FoundController {
 
     @Log("认领启事数据查询")
     @PostMapping("/list")
+    @AnonymousAccess
     public ResponseEntity<Object> getListToPage(FoundQueryDto foundQueryDto, PageQueryCriteria pageQueryCriteria) {
         PageHelper listToPage = foundService.getListToPage(foundQueryDto, pageQueryCriteria);
         return ResponseEntity.ok(listToPage);
@@ -80,5 +82,11 @@ public class FoundController {
     public ResponseEntity<Object> getLostIndex() {
         List<FoundQueryVo> foundIndex = foundService.getFoundIndex();
         return ResponseEntity.ok(foundIndex);
+    }
+
+    @PostMapping("/showInfo/{foundId}")
+    public ResponseEntity<Object> getLostSingle(@PathVariable("foundId") Integer foundId) {
+        FoundQueryVo foundQueryVo = foundService.showFoundOne(foundId);
+        return ResponseEntity.ok(foundQueryVo);
     }
 }

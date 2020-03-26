@@ -1,5 +1,6 @@
 package com.sise.zhaodaola.core.message;
 
+import com.sise.zhaodaola.business.entity.Comment;
 import com.sise.zhaodaola.business.service.CommentService;
 import com.sise.zhaodaola.business.service.dto.CommentQueryDto;
 import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
@@ -52,5 +53,18 @@ public class CommentController {
     public ResponseEntity<Object> deleteComment(@RequestBody List<Integer> commentIds) {
         commentService.deelteComment(commentIds);
         return ResponseEntity.ok("删除评论成功");
+    }
+
+    @Log("提交评论")
+    @PostMapping("/submitComment")
+    public ResponseEntity<Object> submitComment(@RequestBody Comment comment) {
+        commentService.submitComment(comment);
+        return ResponseEntity.ok("提交评论成功");
+    }
+
+    @PostMapping("/showComment")
+    public ResponseEntity<Object> showComentList(String postCode, PageQueryCriteria queryCriteria) {
+        PageHelper pageHelper = commentService.showComment(postCode, queryCriteria);
+        return ResponseEntity.ok(pageHelper);
     }
 }

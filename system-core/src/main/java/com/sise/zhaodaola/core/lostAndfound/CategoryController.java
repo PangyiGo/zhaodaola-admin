@@ -3,6 +3,7 @@ package com.sise.zhaodaola.core.lostAndfound;
 import com.sise.zhaodaola.business.entity.Category;
 import com.sise.zhaodaola.business.service.CategoryService;
 import com.sise.zhaodaola.business.service.dto.CategoryQueryDto;
+import com.sise.zhaodaola.tool.annotation.AnonymousAccess;
 import com.sise.zhaodaola.tool.annotation.Log;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 import org.springframework.http.HttpStatus;
@@ -71,6 +72,7 @@ public class CategoryController {
     }
 
     // 获取全部分类信息
+    @AnonymousAccess
     @PostMapping("/getall")
     public ResponseEntity<Object> getAll() {
         CategoryQueryDto queryDto = new CategoryQueryDto();

@@ -88,4 +88,12 @@ public interface FoundService extends IService<Found> {
      * @return /
      */
     List<FoundQueryVo> getFoundIndex();
+
+    /**
+     * 查看招领启事信息
+     *
+     * @param id /
+     * @return /
+     */
+    FoundQueryVo showFoundOne(Integer id);
 }

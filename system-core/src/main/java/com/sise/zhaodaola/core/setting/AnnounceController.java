@@ -4,6 +4,7 @@ import com.sise.zhaodaola.business.entity.Announce;
 import com.sise.zhaodaola.business.service.AnnounceService;
 import com.sise.zhaodaola.business.service.dto.BasicQueryDto;
 import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
+import com.sise.zhaodaola.tool.annotation.AnonymousAccess;
 import com.sise.zhaodaola.tool.annotation.Log;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -68,5 +69,12 @@ public class AnnounceController {
     public ResponseEntity<Object> getOne(@PathVariable("announceId") Integer announceId) {
         Announce announce = announceService.getOne(announceId);
         return ResponseEntity.ok(announce);
+    }
+
+    @AnonymousAccess
+    @RequestMapping("/showIndex")
+    public ResponseEntity<Object> showIndex() {
+        List<Announce> announces = announceService.showIndex();
+        return ResponseEntity.ok(announces);
     }
 }

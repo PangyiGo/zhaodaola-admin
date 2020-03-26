@@ -50,4 +50,19 @@ public interface CommentService extends IService<Comment> {
      * @param commentIds /
      */
     void deelteComment(List<Integer> commentIds);
+
+    /**
+     * 提交评论
+     *
+     * @param comment /
+     */
+    void submitComment(Comment comment);
+
+    /**
+     * 显示帖子评论列表
+     *
+     * @param postCode /
+     * @return /
+     */
+    PageHelper showComment(String postCode, PageQueryCriteria queryCriteria);
 }

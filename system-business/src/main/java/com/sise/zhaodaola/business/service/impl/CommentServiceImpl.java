@@ -20,6 +20,7 @@ import com.sise.zhaodaola.business.service.UserService;
 import com.sise.zhaodaola.business.service.dto.CommentQueryDto;
 import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
 import com.sise.zhaodaola.business.service.vo.CommentQueryVo;
+import com.sise.zhaodaola.business.service.vo.CommentShowVo;
 import com.sise.zhaodaola.tool.dict.DictManager;
 import com.sise.zhaodaola.tool.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 /**
@@ -88,38 +91,86 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void deelteComment(List<Integer> commentIds) {
+        super.remove(Wrappers.<Comment>lambdaUpdate().in(Comment::getPid, commentIds));
         super.removeByIds(commentIds);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void submitComment(Comment comment) {
+        Integer id = userService.findByUsername(SecurityUtils.getUsername()).getId();
+        comment.setUserId(id);
+        comment.setCreateTime(LocalDateTime.now());
+        super.save(comment);
+    }
+
+    @Override
+    public PageHelper showComment(String postCode, PageQueryCriteria queryCriteria) {
+        Page<Comment> commentPage = new Page<>(queryCriteria.getPage(), queryCriteria.getSize());
+        LambdaQueryWrapper<Comment> query = Wrappers.<Comment>lambdaQuery()
+                .eq(Comment::getPostCode, postCode)
+                .eq(Comment::getPid, 0)
+                .orderByDesc(Comment::getCreateTime);
+        Page<Comment> page = super.page(commentPage, query);
+
+
+        List<CommentShowVo> commentShowVoList = new ArrayList<>(0);
+
+        page.getRecords().forEach(comment -> {
+            CommentQueryVo commentQueryVo = single(comment);
+            LambdaQueryWrapper<Comment> commentLambdaQueryWrapper = Wrappers.<Comment>lambdaQuery()
+                    .eq(Comment::getPid, commentQueryVo.getId())
+                    .orderByDesc(Comment::getCreateTime);
+            List<Comment> commentList = super.list(commentLambdaQueryWrapper);
+
+            CommentShowVo commentShowVo = new CommentShowVo();
+            BeanUtil.copyProperties(commentQueryVo, commentShowVo);
+
+            commentShowVo.setCount(commentList.size());
+            commentShowVo.setChildren(recode(commentList));
+
+            commentShowVoList.add(commentShowVo);
+        });
+
+        return PageUtils.toPage(commentShowVoList, page.getCurrent(), page.getSize(), page.getTotal());
+    }
+
 
     private List<CommentQueryVo> recode(List<Comment> commentList) {
         List<CommentQueryVo> commentQueryVoList = new ArrayList<>(0);
         commentList.forEach(comment -> {
-            CommentQueryVo commentQueryVo = new CommentQueryVo();
-            BeanUtil.copyProperties(comment, commentQueryVo);
-            // post title
-            String title = "";
-            if (comment.getType() == 1) {
-                Lost lost = lostService.getByUuid(comment.getPostCode());
-                if (ObjectUtils.isNotNull(lost))
-                    title = lost.getTitle();
-            } else {
-                Found found = foundService.getByUuid(comment.getPostCode());
-                if (ObjectUtils.isNotNull(found))
-                    title = found.getTitle();
-            }
-            commentQueryVo.setTitle(title);
-            // user name
-            if (comment.getUserId() != null) {
-                User fromUser = userService.getById(comment.getUserId());
-                commentQueryVo.setFromUsername(fromUser.getUsername());
-            }
-            if (comment.getReplayId() != null) {
-                User toUser = userService.getById(comment.getReplayId());
-                commentQueryVo.setToUsername(toUser.getUsername());
-            }
-            commentQueryVoList.add(commentQueryVo);
+            commentQueryVoList.add(single(comment));
         });
         return commentQueryVoList;
+    }
+
+    private CommentQueryVo single(Comment comment) {
+        if (comment == null) return new CommentQueryVo();
+        CommentQueryVo commentQueryVo = new CommentQueryVo();
+        BeanUtil.copyProperties(comment, commentQueryVo);
+        // post title
+        String title = "";
+        if (comment.getType() == 1) {
+            Lost lost = lostService.getByUuid(comment.getPostCode());
+            if (ObjectUtils.isNotNull(lost))
+                title = lost.getTitle();
+        } else {
+            Found found = foundService.getByUuid(comment.getPostCode());
+            if (ObjectUtils.isNotNull(found))
+                title = found.getTitle();
+        }
+        commentQueryVo.setTitle(title);
+        // user name
+        if (comment.getUserId() != null) {
+            User fromUser = userService.getById(comment.getUserId());
+            commentQueryVo.setFromUsername(fromUser.getUsername());
+            commentQueryVo.setAvatar(fromUser.getAvatar());
+        }
+        if (comment.getReplayId() != null) {
+            User toUser = userService.getById(comment.getReplayId());
+            commentQueryVo.setToUsername(toUser.getUsername());
+        }
+        return commentQueryVo;
     }
 
     private LambdaQueryWrapper<Comment> wrapper(CommentQueryDto commentQueryDto) {

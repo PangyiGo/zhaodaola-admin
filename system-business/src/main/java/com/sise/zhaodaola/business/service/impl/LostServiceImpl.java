@@ -169,39 +169,57 @@ public class LostServiceImpl extends ServiceImpl<LostMapper, Lost> implements Lo
         return recode(page.getRecords());
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public LostFoundQueryVo showLostOne(Integer id) {
+        Lost lost = super.getById(id);
+        if (lost == null)
+            return new LostFoundQueryVo();
+        lost.setBrowse(lost.getBrowse() + 1);
+        super.updateById(lost);
+        return single(lost);
+    }
+
     private List<LostFoundQueryVo> recode(List<Lost> lostList) {
         // result
         List<LostFoundQueryVo> lostFoundQueryVoList = new ArrayList<>(0);
         lostList.forEach(lost -> {
-
-            LostFoundQueryVo queryVo = new LostFoundQueryVo();
-
-            // select username and count of comment
-            User user = userService.getById(lost.getUserId());
-            String username = user.getUsername();
-            String nickname = user.getNickName();
-            String avatar = user.getAvatar();
-
-            queryVo.setUsername(username);
-            queryVo.setNickName(nickname);
-            queryVo.setAvatar(avatar);
-
-
-            int count = commentService.count(Wrappers.<Comment>lambdaQuery().eq(Comment::getPostCode, lost.getUuid()));
-            String typeName = categoryService.getById(lost.getType()).getName();
-            // copy
-            BeanUtil.copyProperties(lost, queryVo);
-            queryVo.setType(typeName);
-            if (StringUtils.isNotBlank(lost.getImages())) {
-                List<String> imagesUrl = Arrays.asList(StringUtils.split(lost.getImages(), ","));
-                queryVo.setImagesName(imagesUrl);
-            }
-            queryVo.setComment(count);
-            queryVo.setStatus(DictManager.lostStatus(lost.getStatus()));
             // add
-            lostFoundQueryVoList.add(queryVo);
+            lostFoundQueryVoList.add(single(lost));
         });
         return lostFoundQueryVoList;
+    }
+
+    private LostFoundQueryVo single(Lost lost) {
+        LostFoundQueryVo queryVo = new LostFoundQueryVo();
+
+        if (lost == null)
+            return queryVo;
+
+        // select username and count of comment
+        User user = userService.getById(lost.getUserId());
+        String username = user.getUsername();
+        String nickname = user.getNickName();
+        String avatar = user.getAvatar();
+
+        queryVo.setUsername(username);
+        queryVo.setNickName(nickname);
+        queryVo.setAvatar(avatar);
+
+
+        int count = commentService.count(Wrappers.<Comment>lambdaQuery().eq(Comment::getPostCode, lost.getUuid()));
+        String typeName = categoryService.getById(lost.getType()).getName();
+        // copy
+        BeanUtil.copyProperties(lost, queryVo);
+        queryVo.setType(typeName);
+        if (StringUtils.isNotBlank(lost.getImages())) {
+            List<String> imagesUrl = Arrays.asList(StringUtils.split(lost.getImages(), ","));
+            queryVo.setImagesName(imagesUrl);
+        }
+        queryVo.setComment(count);
+        queryVo.setStatus(DictManager.lostStatus(lost.getStatus()));
+
+        return queryVo;
     }
 
     private LambdaQueryWrapper<Lost> wrapper(LostFoundQueryDto lostFoundQueryDto) {

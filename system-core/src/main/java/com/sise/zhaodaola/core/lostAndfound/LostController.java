@@ -37,6 +37,7 @@ public class LostController {
 
     @Log("查询寻物列表")
     @PostMapping("/list")
+    @AnonymousAccess
     public ResponseEntity<Object> getLosts(LostFoundQueryDto lostFoundQueryDto, PageQueryCriteria queryCriteria) {
         PageHelper listToPage = lostService.getListToPage(lostFoundQueryDto, queryCriteria);
         return ResponseEntity.ok(listToPage);
@@ -82,5 +83,11 @@ public class LostController {
     public ResponseEntity<Object> getLostIndex() {
         List<LostFoundQueryVo> lostIndex = lostService.getLostIndex();
         return ResponseEntity.ok(lostIndex);
+    }
+
+    @PostMapping("/showInfo/{lostId}")
+    public ResponseEntity<Object> getLostSingle(@PathVariable("lostId") Integer lostId) {
+        LostFoundQueryVo lostFoundQueryVo = lostService.showLostOne(lostId);
+        return ResponseEntity.ok(lostFoundQueryVo);
     }
 }
