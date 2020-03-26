@@ -148,6 +148,15 @@ public class FoundServiceImpl extends ServiceImpl<FoundMapper, Found> implements
     }
 
     @Override
+    public List<FoundQueryVo> getFoundIndex() {
+        FoundQueryDto foundQueryDto = new FoundQueryDto();
+        foundQueryDto.setStatus(1);
+        Page<Found> foundPage = new Page<>(1, 12);
+        Page<Found> page = super.page(foundPage, wrapper(foundQueryDto));
+        return recode(page.getRecords());
+    }
+
+    @Override
     public FoundSingleDto getOne(Integer foundId) {
         Found found = super.getById(foundId);
         // copy
@@ -165,10 +174,20 @@ public class FoundServiceImpl extends ServiceImpl<FoundMapper, Found> implements
     private List<FoundQueryVo> recode(List<Found> foundList) {
         List<FoundQueryVo> foundQueryVoList = new ArrayList<>(0);
         foundList.forEach(found -> {
+
             FoundQueryVo foundQueryVo = new FoundQueryVo();
             BeanUtil.copyProperties(found, foundQueryVo);
+
             // select username and count of comment
-            String username = userService.getById(found.getUserId()).getUsername();
+            User user = userService.getById(found.getUserId());
+            String username = user.getUsername();
+            String nickname = user.getNickName();
+            String avatar = user.getAvatar();
+
+            foundQueryVo.setUsername(username);
+            foundQueryVo.setNickName(nickname);
+            foundQueryVo.setAvatar(avatar);
+
             int count = commentService.count(Wrappers.<Comment>lambdaQuery().eq(Comment::getPostCode, found.getUuid()));
             String typeName = categoryService.getById(found.getType()).getName();
             if (found.getOwner() != null) {
@@ -216,6 +235,7 @@ public class FoundServiceImpl extends ServiceImpl<FoundMapper, Found> implements
                 }
             }
         }
+        lambdaQuery.orderByDesc(Found::getCreateTime);
         return lambdaQuery;
     }
 }

@@ -164,7 +164,7 @@ public class LostServiceImpl extends ServiceImpl<LostMapper, Lost> implements Lo
     public List<LostFoundQueryVo> getLostIndex() {
         LostFoundQueryDto lostFoundQueryDto = new LostFoundQueryDto();
         lostFoundQueryDto.setStatus(1);
-        Page<Lost> lostPage = new Page<>(1, 8);
+        Page<Lost> lostPage = new Page<>(1, 12);
         Page<Lost> page = super.page(lostPage, wrapper(lostFoundQueryDto));
         return recode(page.getRecords());
     }
@@ -173,14 +173,24 @@ public class LostServiceImpl extends ServiceImpl<LostMapper, Lost> implements Lo
         // result
         List<LostFoundQueryVo> lostFoundQueryVoList = new ArrayList<>(0);
         lostList.forEach(lost -> {
+
+            LostFoundQueryVo queryVo = new LostFoundQueryVo();
+
             // select username and count of comment
-            String username = userService.getById(lost.getUserId()).getUsername();
+            User user = userService.getById(lost.getUserId());
+            String username = user.getUsername();
+            String nickname = user.getNickName();
+            String avatar = user.getAvatar();
+
+            queryVo.setUsername(username);
+            queryVo.setNickName(nickname);
+            queryVo.setAvatar(avatar);
+
+
             int count = commentService.count(Wrappers.<Comment>lambdaQuery().eq(Comment::getPostCode, lost.getUuid()));
             String typeName = categoryService.getById(lost.getType()).getName();
-            LostFoundQueryVo queryVo = new LostFoundQueryVo();
             // copy
             BeanUtil.copyProperties(lost, queryVo);
-            queryVo.setUsername(username);
             queryVo.setType(typeName);
             if (StringUtils.isNotBlank(lost.getImages())) {
                 List<String> imagesUrl = Arrays.asList(StringUtils.split(lost.getImages(), ","));

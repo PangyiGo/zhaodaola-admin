@@ -112,6 +112,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
         wrapper.eq(newsQueryDto.getStatus() > 0, News::getStatus, newsQueryDto.getStatus());
         wrapper.eq(newsQueryDto.getType() > 0, News::getType, newsQueryDto.getType());
         wrapper.eq(StringUtils.isNotBlank(newsQueryDto.getDept()), News::getDept, newsQueryDto.getDept());
+        wrapper.orderByDesc(News::getCreateTime);
         return wrapper;
     }
 

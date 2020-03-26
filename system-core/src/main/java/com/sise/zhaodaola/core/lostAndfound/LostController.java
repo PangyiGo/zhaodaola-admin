@@ -36,7 +36,6 @@ public class LostController {
 
 
     @Log("查询寻物列表")
-    @PreAuthorize("@auth.check('lost:list')")
     @PostMapping("/list")
     public ResponseEntity<Object> getLosts(LostFoundQueryDto lostFoundQueryDto, PageQueryCriteria queryCriteria) {
         PageHelper listToPage = lostService.getListToPage(lostFoundQueryDto, queryCriteria);

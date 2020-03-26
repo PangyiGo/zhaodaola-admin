@@ -81,4 +81,11 @@ public interface FoundService extends IService<Found> {
      * @return /
      */
     Found getByUuid(String uuid);
+
+    /**
+     * 获取首页招领启事
+     *
+     * @return /
+     */
+    List<FoundQueryVo> getFoundIndex();
 }

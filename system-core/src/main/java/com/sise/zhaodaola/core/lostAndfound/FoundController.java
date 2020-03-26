@@ -1,7 +1,12 @@
 package com.sise.zhaodaola.core.lostAndfound;
 
 import com.sise.zhaodaola.business.service.FoundService;
-import com.sise.zhaodaola.business.service.dto.*;
+import com.sise.zhaodaola.business.service.dto.FoundQueryDto;
+import com.sise.zhaodaola.business.service.dto.FoundSingleDto;
+import com.sise.zhaodaola.business.service.dto.LostFoundBasicDto;
+import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
+import com.sise.zhaodaola.business.service.vo.FoundQueryVo;
+import com.sise.zhaodaola.tool.annotation.AnonymousAccess;
 import com.sise.zhaodaola.tool.annotation.Log;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +40,6 @@ public class FoundController {
     }
 
     @Log("认领启事数据查询")
-    @PreAuthorize("@auth.check('found:list')")
     @PostMapping("/list")
     public ResponseEntity<Object> getListToPage(FoundQueryDto foundQueryDto, PageQueryCriteria pageQueryCriteria) {
         PageHelper listToPage = foundService.getListToPage(foundQueryDto, pageQueryCriteria);
@@ -69,5 +73,12 @@ public class FoundController {
     public ResponseEntity<Object> update(@RequestBody FoundSingleDto foundSingleDto) {
         foundService.updateFound(foundSingleDto);
         return new ResponseEntity<>("修改成功", HttpStatus.OK);
+    }
+
+    @AnonymousAccess
+    @PostMapping("/index")
+    public ResponseEntity<Object> getLostIndex() {
+        List<FoundQueryVo> foundIndex = foundService.getFoundIndex();
+        return ResponseEntity.ok(foundIndex);
     }
 }
