@@ -132,6 +132,7 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
             if (StringUtils.isNotBlank(basicQueryDto.getStart()) && StringUtils.isNotBlank(basicQueryDto.getEnd()))
                 wrapper.between(Log::getCreateTime, DateTimeUtils.dateTime(basicQueryDto.getStart(), DatePattern.NORM_DATETIME_PATTERN), DateTimeUtils.dateTime(basicQueryDto.getEnd(), DatePattern.NORM_DATETIME_PATTERN));
         }
+        wrapper.orderByDesc(Log::getCreateTime);
         return wrapper;
     }
 }

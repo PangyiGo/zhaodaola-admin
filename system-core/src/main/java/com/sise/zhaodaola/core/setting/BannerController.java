@@ -70,9 +70,9 @@ public class BannerController {
         return ResponseEntity.ok(banner);
     }
 
-    @PostMapping("/show")
+    @PostMapping("/show/{type}")
     @AnonymousAccess
-    public ResponseEntity<Object> getBanners() {
-        return ResponseEntity.ok(bannerService.getBanners());
+    public ResponseEntity<Object> getBanners(@PathVariable("type")Integer type) {
+        return ResponseEntity.ok(bannerService.getBanners(type));
     }
 }

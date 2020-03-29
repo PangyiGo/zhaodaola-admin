@@ -75,6 +75,28 @@ public class AnnouceServiceImpl extends ServiceImpl<AnnounceMapper, Announce> im
         return page.getRecords();
     }
 
+    @Override
+    public PageHelper showList(PageQueryCriteria pageQueryCriteria) {
+        Page<Announce> announcePage = new Page<>(pageQueryCriteria.getPage(), pageQueryCriteria.getSize());
+
+        BasicQueryDto basicQueryDto = new BasicQueryDto();
+        basicQueryDto.setStatus(1);
+
+        Page<Announce> page = super.page(announcePage, wrapper(basicQueryDto));
+        return PageUtils.toPage(page.getRecords(), page.getCurrent(), page.getSize(), page.getTotal());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Announce showOne(Integer id) {
+        Announce announce = super.getById(id);
+        if (announce == null)
+            return new Announce();
+        announce.setBrowse(announce.getBrowse() + 1);
+        super.updateById(announce);
+        return announce;
+    }
+
     private LambdaQueryWrapper<Announce> wrapper(BasicQueryDto basicQueryDto) {
         LambdaQueryWrapper<Announce> wrapper = Wrappers.<Announce>lambdaQuery();
         if (ObjectUtils.isNotEmpty(basicQueryDto)) {

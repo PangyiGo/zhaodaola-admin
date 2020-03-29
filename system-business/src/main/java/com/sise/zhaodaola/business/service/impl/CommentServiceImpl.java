@@ -8,15 +8,9 @@ import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sise.zhaodaola.business.entity.Comment;
-import com.sise.zhaodaola.business.entity.Found;
-import com.sise.zhaodaola.business.entity.Lost;
-import com.sise.zhaodaola.business.entity.User;
+import com.sise.zhaodaola.business.entity.*;
 import com.sise.zhaodaola.business.mapper.CommentMapper;
-import com.sise.zhaodaola.business.service.CommentService;
-import com.sise.zhaodaola.business.service.FoundService;
-import com.sise.zhaodaola.business.service.LostService;
-import com.sise.zhaodaola.business.service.UserService;
+import com.sise.zhaodaola.business.service.*;
 import com.sise.zhaodaola.business.service.dto.CommentQueryDto;
 import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
 import com.sise.zhaodaola.business.service.vo.CommentQueryVo;
@@ -55,6 +49,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private MessageService messageService;
+
 
     @Override
     public PageHelper getComment(CommentQueryDto commentQueryDto, PageQueryCriteria queryCriteria) {
@@ -92,6 +89,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Override
     public void deelteComment(List<Integer> commentIds) {
         super.remove(Wrappers.<Comment>lambdaUpdate().in(Comment::getPid, commentIds));
+
+        messageService.remove(Wrappers.<Message>lambdaQuery().in(Message::getCommentId, commentIds));
+
         super.removeByIds(commentIds);
     }
 
@@ -102,6 +102,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         comment.setUserId(id);
         comment.setCreateTime(LocalDateTime.now());
         super.save(comment);
+        // 保存消息
+        if (comment.getReplayId() != null) {
+            if (!comment.getReplayId().equals(id) && !comment.getReplayId().equals(id)) {
+                messageService.saveCommentMessage(comment);
+            }
+        }
     }
 
     @Override
@@ -165,10 +171,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             User fromUser = userService.getById(comment.getUserId());
             commentQueryVo.setFromUsername(fromUser.getUsername());
             commentQueryVo.setAvatar(fromUser.getAvatar());
+            commentQueryVo.setFromNickName(fromUser.getNickName());
         }
         if (comment.getReplayId() != null) {
             User toUser = userService.getById(comment.getReplayId());
             commentQueryVo.setToUsername(toUser.getUsername());
+            commentQueryVo.setToNickName(toUser.getNickName());
         }
         return commentQueryVo;
     }

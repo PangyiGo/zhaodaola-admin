@@ -32,6 +32,15 @@ public interface NewsService extends IService<News> {
     PageHelper getListNews(NewsQueryDto newsQueryDto, PageQueryCriteria queryCriteria);
 
     /**
+     * 校园资讯专栏
+     *
+     * @param newsQueryDto  /
+     * @param queryCriteria /
+     * @return /
+     */
+    PageHelper showNewsList(NewsQueryDto newsQueryDto, PageQueryCriteria queryCriteria);
+
+    /**
      * 删除校园资讯
      *
      * @param newsIds /

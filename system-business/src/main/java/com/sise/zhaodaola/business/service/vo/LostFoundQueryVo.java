@@ -65,4 +65,6 @@ public class LostFoundQueryVo implements Serializable {
 
     // 状态
     private String status;
+
+    private int statusId;
 }

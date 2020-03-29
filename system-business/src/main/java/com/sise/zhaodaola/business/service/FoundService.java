@@ -96,4 +96,19 @@ public interface FoundService extends IService<Found> {
      * @return /
      */
     FoundQueryVo showFoundOne(Integer id);
+
+    /**
+     * 相关推荐
+     *
+     * @param category /
+     * @return /
+     */
+    List<FoundQueryVo> pushFound(String category, Integer slfe);
+
+    /**
+     * 删除
+     *
+     * @param foundId /
+     */
+    void deleteOne(Integer foundId);
 }

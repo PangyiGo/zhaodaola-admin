@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sise.zhaodaola.business.entity.Category;
 import com.sise.zhaodaola.business.entity.Comment;
 import com.sise.zhaodaola.business.entity.Lost;
 import com.sise.zhaodaola.business.entity.User;
@@ -54,14 +55,16 @@ public class LostServiceImpl extends ServiceImpl<LostMapper, Lost> implements Lo
     @Override
     public void publishLost(LostFoundBasicDto lostFoundBasicDto) {
         Lost lost = new Lost();
+
         // copy attribute
         BeanUtil.copyProperties(lostFoundBasicDto, lost);
-        if (StringUtils.isNotBlank(lostFoundBasicDto.getLostTime()))
+        if (StringUtils.isNotBlank(lostFoundBasicDto.getLostTime())) {
             try {
                 lost.setLostTime(DateUtil.toLocalDateTime(DateUtil.parse(lostFoundBasicDto.getLostTime())));
             } catch (Exception e) {
                 throw new BadRequestException("时间格式化异常");
             }
+        }
         if (ObjectUtil.isNotNull(lostFoundBasicDto.getImages())) {
             List<String> images = lostFoundBasicDto.getImages();
             String imagesUrl = StringUtils.join(images, ",");
@@ -180,6 +183,31 @@ public class LostServiceImpl extends ServiceImpl<LostMapper, Lost> implements Lo
         return single(lost);
     }
 
+    @Override
+    public List<LostFoundQueryVo> pushLost(String category, Integer slfe) {
+        Category category1 = categoryService.findbyName(category);
+        LostFoundQueryDto foundQueryDto = new LostFoundQueryDto();
+        foundQueryDto.setStatus(1);
+        foundQueryDto.setType(category1.getId());
+
+        LambdaQueryWrapper<Lost> wrapper = wrapper(foundQueryDto);
+        wrapper.ne(Lost::getId, slfe);
+        wrapper.orderByAsc(Lost::getCreateTime);
+
+        Page<Lost> lostPage = new Page<>(1, 5);
+        Page<Lost> page = super.page(lostPage, wrapper);
+
+        return recode(page.getRecords());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void delete(Integer lostId) {
+        Lost lost = super.getById(lostId);
+        commentService.remove(Wrappers.<Comment>lambdaQuery().eq(Comment::getPostCode, lost.getUuid()));
+        super.removeById(lostId);
+    }
+
     private List<LostFoundQueryVo> recode(List<Lost> lostList) {
         // result
         List<LostFoundQueryVo> lostFoundQueryVoList = new ArrayList<>(0);
@@ -218,6 +246,7 @@ public class LostServiceImpl extends ServiceImpl<LostMapper, Lost> implements Lo
         }
         queryVo.setComment(count);
         queryVo.setStatus(DictManager.lostStatus(lost.getStatus()));
+        queryVo.setStatusId(lost.getStatus());
 
         return queryVo;
     }
@@ -235,13 +264,12 @@ public class LostServiceImpl extends ServiceImpl<LostMapper, Lost> implements Lo
             if (StringUtils.isNotBlank(lostFoundQueryDto.getStart()) && StringUtils.isNotBlank(lostFoundQueryDto.getEnd()))
                 wrapper.between(Lost::getCreateTime, DateTimeUtils.beginOfDay(lostFoundQueryDto.getStart()), DateTimeUtils.endOfDay(lostFoundQueryDto.getEnd()));
             if (StringUtils.isNotBlank(lostFoundQueryDto.getUsername())) {
-                LambdaQueryWrapper<User> userWrapper = Wrappers.<User>lambdaQuery().like(User::getUsername, lostFoundQueryDto.getUsername()).select(User::getId);
-                List<User> userList = userService.list(userWrapper);
-                if (userList != null && userList.size() > 0) {
-                    List<Integer> integers = userList.stream().map(User::getId).collect(Collectors.toList());
-                    wrapper.in(Lost::getUserId, integers);
+                LambdaQueryWrapper<User> userWrapper = Wrappers.<User>lambdaQuery().eq(User::getUsername, lostFoundQueryDto.getUsername()).select(User::getId);
+                User user = userService.getOne(userWrapper);
+                if (user != null) {
+                    wrapper.eq(Lost::getUserId, user.getId());
                 } else {
-                    wrapper.in(Lost::getUserId, -1);
+                    wrapper.eq(Lost::getUserId, -1);
                 }
             }
         }

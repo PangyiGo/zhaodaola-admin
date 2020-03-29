@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.sise.zhaodaola.business.entity.Banner;
 import com.sise.zhaodaola.business.service.dto.BasicQueryDto;
 import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
+import com.sise.zhaodaola.business.service.vo.BannerQueryVo;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 
 import java.util.List;
@@ -54,7 +55,8 @@ public interface BannerService extends IService<Banner> {
 
     /**
      * 首页展示轮播图
+     *
      * @return /
      */
-    List<Banner> getBanners();
+    List<BannerQueryVo> getBanners(Integer type);
 }

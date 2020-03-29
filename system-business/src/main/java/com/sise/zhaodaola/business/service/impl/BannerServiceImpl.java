@@ -72,14 +72,7 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner> impleme
         Page<Banner> page = super.page(bannerPage, wrapper(basicQueryDto));
         List<BannerQueryVo> bannerQueryVoList = new ArrayList<>(0);
         page.getRecords().forEach(banner -> {
-            BannerQueryVo bannerQueryVo = new BannerQueryVo();
-            BeanUtil.copyProperties(banner, bannerQueryVo);
-            News news = newsService.getOne(Wrappers.<News>lambdaQuery().select(News::getId, News::getTitle).eq(StringUtils.isNotBlank(banner.getLink()), News::getUuid, banner.getLink()));
-            if (ObjectUtil.isNotNull(news)) {
-                bannerQueryVo.setNewsId(news.getId());
-                bannerQueryVo.setNewsTitle(news.getTitle());
-            }
-            bannerQueryVoList.add(bannerQueryVo);
+            bannerQueryVoList.add(recode(banner));
         });
         return PageUtils.toPage(bannerQueryVoList, page.getCurrent(), page.getSize(), page.getTotal());
     }
@@ -90,11 +83,29 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner> impleme
     }
 
     @Override
-    public List<Banner> getBanners() {
+    public List<BannerQueryVo> getBanners(Integer type) {
         BasicQueryDto basicQueryDto = new BasicQueryDto();
-        basicQueryDto.setCategory(1);
+        basicQueryDto.setCategory(type);
         basicQueryDto.setStatus(1);
-        return super.list(wrapper(basicQueryDto));
+
+        List<Banner> bannerList = super.list(wrapper(basicQueryDto).orderByDesc(Banner::getCreateTime));
+
+        List<BannerQueryVo> bannerQueryVoList = new ArrayList<>(0);
+        bannerList.forEach(banner -> {
+            bannerQueryVoList.add(recode(banner));
+        });
+        return bannerQueryVoList;
+    }
+
+    private BannerQueryVo recode(Banner banner) {
+        BannerQueryVo bannerQueryVo = new BannerQueryVo();
+        BeanUtil.copyProperties(banner, bannerQueryVo);
+        News news = newsService.getOne(Wrappers.<News>lambdaQuery().select(News::getId, News::getTitle).eq(StringUtils.isNotBlank(banner.getLink()), News::getUuid, banner.getLink()));
+        if (ObjectUtil.isNotNull(news)) {
+            bannerQueryVo.setNewsId(news.getId());
+            bannerQueryVo.setNewsTitle(news.getTitle());
+        }
+        return bannerQueryVo;
     }
 
     private LambdaQueryWrapper<Banner> wrapper(BasicQueryDto basicQueryDto) {

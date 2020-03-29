@@ -21,17 +21,23 @@ public class CommentQueryVo implements Serializable {
 
     private String content;
 
+    private int level;
+
     private int type;
 
     private Integer userId;
 
     private String fromUsername;  // 评论者用户名
 
+    private String fromNickName;
+
     private String avatar; // 头像
 
     private Integer replayId;
 
     private String toUsername; // 被评论者用户名
+
+    private String toNickName;
 
     private Integer pid;
 

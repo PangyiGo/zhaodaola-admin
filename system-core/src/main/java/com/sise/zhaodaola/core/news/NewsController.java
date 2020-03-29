@@ -49,6 +49,13 @@ public class NewsController {
         return ResponseEntity.ok(pageHelper);
     }
 
+    @AnonymousAccess
+    @PostMapping("/showNews")
+    public ResponseEntity<Object> showNewsList(NewsQueryDto newsQueryDto, PageQueryCriteria queryCriteria) {
+        PageHelper pageHelper = newsService.showNewsList(newsQueryDto, queryCriteria);
+        return ResponseEntity.ok(pageHelper);
+    }
+
     @PostMapping("/showIndex")
     @AnonymousAccess
     public ResponseEntity<Object> getListShow() {
@@ -64,6 +71,7 @@ public class NewsController {
         return new ResponseEntity<>("校园资讯删除成功", HttpStatus.OK);
     }
 
+    @AnonymousAccess
     @PostMapping("/getOne/{newsId}")
     public ResponseEntity<Object> getOne(@PathVariable("newsId") Integer newsId) {
         NewsQueryVo newsQueryVo = newsService.viewNews(newsId);

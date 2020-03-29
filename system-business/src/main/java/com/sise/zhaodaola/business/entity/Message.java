@@ -31,9 +31,9 @@ public class Message extends Model<Message> implements Serializable {
 
     private Integer type;
 
-    private Integer from;
+    private Integer fromUser;
 
-    private Integer to;
+    private Integer toUser;
 
     private String content;
 

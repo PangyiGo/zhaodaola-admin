@@ -99,6 +99,7 @@ public class SiteServiceImpl extends ServiceImpl<SiteMapper, Site> implements Si
             q.or().like(Site::getAddress, siteQueryDto.getWord());
             q.or().like(Site::getCharge, siteQueryDto.getWord());
         });
+        wrapper.orderByDesc(Site::getCreateTime);
         return wrapper;
     }
 }

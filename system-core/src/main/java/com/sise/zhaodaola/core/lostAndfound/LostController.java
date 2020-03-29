@@ -35,7 +35,6 @@ public class LostController {
     private LostService lostService;
 
 
-    @Log("查询寻物列表")
     @PostMapping("/list")
     @AnonymousAccess
     public ResponseEntity<Object> getLosts(LostFoundQueryDto lostFoundQueryDto, PageQueryCriteria queryCriteria) {
@@ -55,6 +54,13 @@ public class LostController {
     @PostMapping("/delete")
     public ResponseEntity<Object> deleteLost(@RequestBody List<Integer> lostIds) {
         lostService.deleteLost(lostIds);
+        return new ResponseEntity<>("寻物启事删除成功", HttpStatus.OK);
+    }
+
+    @Log("寻物启事删除")
+    @PostMapping("/delete/{lostId}")
+    public ResponseEntity<Object> deleteLost(@PathVariable("lostId") Integer lostId) {
+        lostService.delete(lostId);
         return new ResponseEntity<>("寻物启事删除成功", HttpStatus.OK);
     }
 
@@ -89,5 +95,11 @@ public class LostController {
     public ResponseEntity<Object> getLostSingle(@PathVariable("lostId") Integer lostId) {
         LostFoundQueryVo lostFoundQueryVo = lostService.showLostOne(lostId);
         return ResponseEntity.ok(lostFoundQueryVo);
+    }
+
+    @PostMapping("/pushLost")
+    public ResponseEntity<Object> pushLost(String name, Integer slfe) {
+        List<LostFoundQueryVo> lostFoundQueryVos = lostService.pushLost(name, slfe);
+        return ResponseEntity.ok(lostFoundQueryVos);
     }
 }

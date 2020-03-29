@@ -40,7 +40,6 @@ public class FoundController {
         return new ResponseEntity<>("认领启事登记成功", HttpStatus.OK);
     }
 
-    @Log("认领启事数据查询")
     @PostMapping("/list")
     @AnonymousAccess
     public ResponseEntity<Object> getListToPage(FoundQueryDto foundQueryDto, PageQueryCriteria pageQueryCriteria) {
@@ -60,6 +59,12 @@ public class FoundController {
     @PostMapping("/delete")
     public ResponseEntity<Object> deleteForIds(@RequestBody List<Integer> foundIds) {
         foundService.deleteFound(foundIds);
+        return new ResponseEntity<>("认领启事删除成功", HttpStatus.OK);
+    }
+    @Log("认领启事删除")
+    @PostMapping("/delete/{foundId}")
+    public ResponseEntity<Object> deleteForIds(@PathVariable("foundId")Integer foundId) {
+        foundService.deleteOne(foundId);
         return new ResponseEntity<>("认领启事删除成功", HttpStatus.OK);
     }
 
@@ -88,5 +93,11 @@ public class FoundController {
     public ResponseEntity<Object> getLostSingle(@PathVariable("foundId") Integer foundId) {
         FoundQueryVo foundQueryVo = foundService.showFoundOne(foundId);
         return ResponseEntity.ok(foundQueryVo);
+    }
+
+    @PostMapping("/pushFound")
+    public ResponseEntity<Object> pushFound(String name, Integer slfe) {
+        List<FoundQueryVo> foundQueryVos = foundService.pushFound(name, slfe);
+        return ResponseEntity.ok(foundQueryVos);
     }
 }

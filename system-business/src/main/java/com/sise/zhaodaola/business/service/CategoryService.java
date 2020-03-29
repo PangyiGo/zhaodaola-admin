@@ -60,4 +60,12 @@ public interface CategoryService extends IService<Category> {
      * @param category /
      */
     void createCategory(Category category);
+
+    /**
+     * 查询分类
+     *
+     * @param name /
+     * @return /
+     */
+    Category findbyName(String name);
 }

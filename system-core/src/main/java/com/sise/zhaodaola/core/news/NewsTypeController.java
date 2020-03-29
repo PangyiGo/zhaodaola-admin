@@ -4,6 +4,7 @@ import com.sise.zhaodaola.business.entity.NewsType;
 import com.sise.zhaodaola.business.service.NewsTypeService;
 import com.sise.zhaodaola.business.service.dto.BasicQueryDto;
 import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
+import com.sise.zhaodaola.tool.annotation.AnonymousAccess;
 import com.sise.zhaodaola.tool.annotation.Log;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,7 @@ public class NewsTypeController {
     }
 
     @PostMapping("/getAll")
+    @AnonymousAccess
     public ResponseEntity<Object> getAllNewsType() {
         List<NewsType> newsTypeList = newsTypeService.getAll();
         return ResponseEntity.ok(newsTypeList);

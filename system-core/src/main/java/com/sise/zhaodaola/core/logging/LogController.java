@@ -31,7 +31,6 @@ public class LogController {
         this.logService = logService;
     }
 
-    @Log("日志查询")
     @PreAuthorize("@auth.check('log:list')")
     @PostMapping("/list/{type}")
     public ResponseEntity<Object> getLogList(@PathVariable("type") String type, BasicQueryDto basicQueryDto, PageQueryCriteria queryCriteria) {

@@ -58,4 +58,20 @@ public interface AnnounceService extends IService<Announce> {
      * @return /
      */
     List<Announce> showIndex();
+
+    /**
+     * 网站公告专栏
+     *
+     * @param pageQueryCriteria /
+     * @return /
+     */
+    PageHelper showList(PageQueryCriteria pageQueryCriteria);
+
+    /**
+     * 查看
+     *
+     * @param id /
+     * @return /
+     */
+    Announce showOne(Integer id);
 }

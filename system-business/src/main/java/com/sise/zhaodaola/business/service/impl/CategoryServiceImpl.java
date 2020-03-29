@@ -91,6 +91,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         super.save(category);
     }
 
+    @Override
+    public Category findbyName(String name) {
+        return super.getOne(Wrappers.<Category>lambdaQuery().eq(Category::getName, name));
+    }
+
     private LambdaQueryWrapper<Category> wrapper(CategoryQueryDto categoryQueryDto) {
         LambdaQueryWrapper<Category> wrapper = Wrappers.<Category>lambdaQuery();
         wrapper.eq(categoryQueryDto.getStatus() != 0, Category::getStatus, categoryQueryDto.getStatus());

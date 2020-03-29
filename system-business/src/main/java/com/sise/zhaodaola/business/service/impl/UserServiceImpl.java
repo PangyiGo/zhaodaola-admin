@@ -270,6 +270,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateUserInfo(User user) {
+
+        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery().eq(User::getNickName, user.getNickName());
+        User one = super.getOne(wrapper);
+        if (one != null)
+            throw new BadRequestException("昵称已被使用，请重新更换");
+
         user.setUpdateTime(LocalDateTime.now());
         super.updateById(user);
     }

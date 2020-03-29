@@ -54,9 +54,17 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
     @Override
     public PageHelper getListNews(NewsQueryDto newsQueryDto, PageQueryCriteria queryCriteria) {
         Page<News> newsPage = new Page<>(queryCriteria.getPage(), queryCriteria.getSize());
-        Page<News> resultPage = super.page(newsPage, wrapper(newsQueryDto));
+        Page<News> resultPage = super.page(newsPage, wrapper(newsQueryDto).orderByDesc(News::getCreateTime));
         List<NewsQueryVo> queryVoList = recode(resultPage.getRecords());
         return PageUtils.toPage(queryVoList, resultPage.getCurrent(), resultPage.getSize(), resultPage.getTotal());
+    }
+
+    @Override
+    public PageHelper showNewsList(NewsQueryDto newsQueryDto, PageQueryCriteria queryCriteria) {
+        Page<News> newsPage = new Page<>(queryCriteria.getPage(), queryCriteria.getSize());
+        LambdaQueryWrapper<News> wrapper = wrapper(newsQueryDto).orderByAsc(News::getPlacement).orderByDesc(News::getCreateTime);
+        Page<News> resultPage = super.page(newsPage, wrapper);
+        return PageUtils.toPage(resultPage.getRecords(), resultPage.getCurrent(), resultPage.getSize(), resultPage.getTotal());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -65,9 +73,16 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
         super.removeByIds(newsIds);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public NewsQueryVo viewNews(Integer newsId) {
         News news = super.getById(newsId);
+        if (news == null) new NewsQueryVo();
+
+        assert news != null;
+        news.setBrowse(news.getBrowse() + 1);
+        super.updateById(news);
+
         NewsQueryVo newsQueryVo = new NewsQueryVo();
         BeanUtil.copyProperties(news, newsQueryVo);
         String newsType = newsTypeService.getById(news.getType()).getName();
@@ -93,7 +108,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
         NewsQueryDto newsQueryDto = new NewsQueryDto();
         newsQueryDto.setStatus(1);
         Page<News> newsPage = new Page<>(1, 10);
-        Page<News> resultPage = super.page(newsPage, wrapper(newsQueryDto));
+        Page<News> resultPage = super.page(newsPage, wrapper(newsQueryDto).orderByDesc(News::getCreateTime));
         return recode(resultPage.getRecords());
     }
 
@@ -121,7 +136,6 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
         wrapper.eq(newsQueryDto.getStatus() > 0, News::getStatus, newsQueryDto.getStatus());
         wrapper.eq(newsQueryDto.getType() > 0, News::getType, newsQueryDto.getType());
         wrapper.eq(StringUtils.isNotBlank(newsQueryDto.getDept()), News::getDept, newsQueryDto.getDept());
-        wrapper.orderByDesc(News::getCreateTime);
         return wrapper;
     }
 

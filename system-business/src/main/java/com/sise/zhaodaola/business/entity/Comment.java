@@ -41,6 +41,8 @@ public class Comment extends Model<Comment> implements Serializable {
 
     private Integer pid;
 
+    private int level;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 }

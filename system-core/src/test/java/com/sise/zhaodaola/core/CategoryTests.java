@@ -2,12 +2,16 @@ package com.sise.zhaodaola.core;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.sise.zhaodaola.business.entity.Category;
+import com.sise.zhaodaola.business.entity.Message;
 import com.sise.zhaodaola.business.service.CategoryService;
+import com.sise.zhaodaola.business.service.MessageService;
 import com.sise.zhaodaola.business.service.dto.CategoryQueryDto;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 /**
  * @Author: PangYi
@@ -18,6 +22,15 @@ class CategoryTests {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private MessageService messageService;
+
+    @Test
+    void test05(){
+        List<Message> list = messageService.list();
+        System.out.println(list);
+    }
 
     @Test
     void test01() {

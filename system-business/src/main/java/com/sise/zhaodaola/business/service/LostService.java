@@ -89,4 +89,19 @@ public interface LostService extends IService<Lost> {
      * @return /
      */
     LostFoundQueryVo showLostOne(Integer id);
+
+    /**
+     * 相关推荐
+     *
+     * @param category /
+     * @return /
+     */
+    List<LostFoundQueryVo> pushLost(String category, Integer slfe);
+
+    /**
+     * 删除寻物启事
+     *
+     * @param lostId /
+     */
+    void delete(Integer lostId);
 }

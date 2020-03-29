@@ -9,9 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sise.zhaodaola.business.entity.Comment;
-import com.sise.zhaodaola.business.entity.Found;
-import com.sise.zhaodaola.business.entity.User;
+import com.sise.zhaodaola.business.entity.*;
 import com.sise.zhaodaola.business.mapper.FoundMapper;
 import com.sise.zhaodaola.business.service.*;
 import com.sise.zhaodaola.business.service.dto.*;
@@ -167,6 +165,30 @@ public class FoundServiceImpl extends ServiceImpl<FoundMapper, Found> implements
     }
 
     @Override
+    public List<FoundQueryVo> pushFound(String category, Integer slfe) {
+        Category category1 = categoryService.findbyName(category);
+        FoundQueryDto foundQueryDto = new FoundQueryDto();
+        foundQueryDto.setStatus(1);
+        foundQueryDto.setType(category1.getId());
+
+        LambdaQueryWrapper<Found> wrapper = wrapper(foundQueryDto);
+        wrapper.ne(Found::getId, slfe);
+        wrapper.orderByAsc(Found::getCreateTime);
+
+        Page<Found> foundPage = new Page<>(1, 5);
+        Page<Found> resultPage = super.page(foundPage, wrapper);
+        return recode(resultPage.getRecords());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteOne(Integer foundId) {
+        Found found = super.getById(foundId);
+        commentService.remove(Wrappers.<Comment>lambdaQuery().eq(Comment::getPostCode, found.getUuid()));
+        super.removeById(foundId);
+    }
+
+    @Override
     public FoundSingleDto getOne(Integer foundId) {
         Found found = super.getById(foundId);
         // copy
@@ -218,6 +240,7 @@ public class FoundServiceImpl extends ServiceImpl<FoundMapper, Found> implements
         foundQueryVo.setComment(count);
         foundQueryVo.setType(typeName);
         foundQueryVo.setStatus(DictManager.foundStatus(found.getStatus()));
+        foundQueryVo.setStatusId(found.getStatus());
         if (StringUtils.isNotBlank(found.getImages())) {
             List<String> imagesUrl = Arrays.asList(StringUtils.split(found.getImages(), ","));
             foundQueryVo.setImagesName(imagesUrl);
@@ -238,13 +261,12 @@ public class FoundServiceImpl extends ServiceImpl<FoundMapper, Found> implements
             if (StringUtils.isNotBlank(foundQueryDto.getStart()) && StringUtils.isNotBlank(foundQueryDto.getEnd()))
                 lambdaQuery.between(Found::getCreateTime, DateTimeUtils.beginOfDay(foundQueryDto.getStart()), DateTimeUtils.endOfDay(foundQueryDto.getEnd()));
             if (StringUtils.isNotBlank(foundQueryDto.getUsername())) {
-                LambdaQueryWrapper<User> userWrapper = Wrappers.<User>lambdaQuery().like(User::getUsername, foundQueryDto.getUsername()).select(User::getId);
-                List<User> userList = userService.list(userWrapper);
-                if (userList != null && userList.size() > 0) {
-                    List<Integer> integers = userList.stream().map(User::getId).collect(Collectors.toList());
-                    lambdaQuery.in(Found::getUserId, integers);
+                LambdaQueryWrapper<User> userWrapper = Wrappers.<User>lambdaQuery().eq(User::getUsername, foundQueryDto.getUsername()).select(User::getId);
+                User user = userService.getOne(userWrapper);
+                if (user != null) {
+                    lambdaQuery.eq(Found::getUserId, user.getId());
                 } else {
-                    lambdaQuery.in(Found::getUserId, -1);
+                    lambdaQuery.eq(Found::getUserId, -1);
                 }
             }
         }

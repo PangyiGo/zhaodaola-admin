@@ -31,19 +31,12 @@ public class Thanks extends Model<Thanks> implements Serializable {
 
     private Integer userId;
 
-    private Integer toId;
-
     private String title;
 
     private String content;
-
-    private String portCode;
 
     private Integer status;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updateTime;
 }
