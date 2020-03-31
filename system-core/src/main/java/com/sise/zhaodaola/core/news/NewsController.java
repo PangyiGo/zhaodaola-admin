@@ -11,7 +11,6 @@ import com.sise.zhaodaola.tool.utils.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +33,6 @@ public class NewsController {
     }
 
     @Log("校园资讯发布")
-    @PreAuthorize("@auth.check('news:publish')")
     @PostMapping("/publish")
     public ResponseEntity<Object> publish(@RequestBody News news) {
         newsService.publishNews(news);
@@ -42,7 +40,6 @@ public class NewsController {
     }
 
     @Log("校园资讯查询")
-    @PreAuthorize("@auth.check('news:list')")
     @PostMapping("/list")
     public ResponseEntity<Object> getList(NewsQueryDto newsQueryDto, PageQueryCriteria queryCriteria) {
         PageHelper pageHelper = newsService.getListNews(newsQueryDto, queryCriteria);
@@ -64,7 +61,6 @@ public class NewsController {
     }
 
     @Log("校园资讯删除")
-    @PreAuthorize("@auth.check('news:delete')")
     @PostMapping("/delete")
     public ResponseEntity<Object> delete(@RequestBody List<Integer> newsIds) {
         newsService.delete(newsIds);
@@ -85,7 +81,6 @@ public class NewsController {
     }
 
     @Log("校园资讯修改")
-    @PreAuthorize("@auth.check('news:update')")
     @PostMapping("/update")
     public ResponseEntity<Object> update(@RequestBody News news) {
         newsService.update(news);

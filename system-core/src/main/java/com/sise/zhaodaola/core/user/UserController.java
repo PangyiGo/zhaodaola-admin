@@ -1,7 +1,5 @@
 package com.sise.zhaodaola.core.user;
 
-import cn.hutool.crypto.asymmetric.KeyType;
-import cn.hutool.crypto.asymmetric.RSA;
 import com.sise.zhaodaola.business.entity.User;
 import com.sise.zhaodaola.business.service.UserService;
 import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
@@ -16,7 +14,6 @@ import com.sise.zhaodaola.tool.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,7 +43,6 @@ public class UserController {
     }
 
     @Log("查询用户")
-    @PreAuthorize("@auth.check('user:list')")
     @PostMapping("/list")
     public ResponseEntity<Object> getUser(UserQueryDto userQueryDto, PageQueryCriteria criteria) {
         PageHelper userList = userService.getUserList(userQueryDto, criteria);
@@ -54,7 +50,6 @@ public class UserController {
     }
 
     @Log("修改用户")
-    @PreAuthorize("@auth.check('user:update')")
     @PostMapping("/update")
     public ResponseEntity<Object> updateUser(@RequestBody UserUpdateDto userUpdateDto) {
         userService.updateUser(userUpdateDto);
@@ -62,7 +57,6 @@ public class UserController {
     }
 
     @Log("重置密码")
-    @PreAuthorize("@auth.check('user:resetPassword')")
     @PostMapping("/resetPassword")
     public ResponseEntity<Object> resetPasswordUser(@RequestBody List<Integer> uid) {
         userService.resetPasswordUser(uid);
@@ -70,14 +64,12 @@ public class UserController {
     }
 
     @Log("用户数据导出")
-    @PreAuthorize("@auth.check('user:list')")
     @PostMapping("/download")
     public void downloadUser(UserQueryDto userQueryDto, HttpServletResponse response) throws IOException {
         userService.downloadUser(userService.findAll(userQueryDto), response);
     }
 
     @Log("新增用户")
-    @PreAuthorize("@auth.check('user:add')")
     @PostMapping("/create")
     public ResponseEntity<Object> createUser(@RequestBody UserUpdateDto userUpdateDto) {
         userService.createUser(userUpdateDto);
@@ -85,7 +77,6 @@ public class UserController {
     }
 
     @Log("删除用户")
-    @PreAuthorize("@auth.check('user:delete')")
     @PostMapping("/delete")
     public ResponseEntity<Object> deleteUser(@RequestBody List<Integer> userIds) {
         /*
@@ -96,7 +87,6 @@ public class UserController {
     }
 
     @Log("用户批量导入")
-    @PreAuthorize("@auth.check('user:import')")
     @PostMapping("/import")
     public ResponseEntity<Object> importUser(MultipartFile file) {
         userService.importUser(file);

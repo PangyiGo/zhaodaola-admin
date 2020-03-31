@@ -10,7 +10,6 @@ import com.sise.zhaodaola.tool.utils.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +30,6 @@ public class AnnounceController {
     }
 
     @Log("新增网站公告")
-    @PreAuthorize("@auth.check('announce:create')")
     @RequestMapping("/create")
     public ResponseEntity<Object> createAnnounce(@RequestBody Announce announce) {
         announceService.createAnnounce(announce);
@@ -39,7 +37,6 @@ public class AnnounceController {
     }
 
     @Log("删除网站公告")
-    @PreAuthorize("@auth.check('announce:deelte')")
     @RequestMapping("/delete")
     public ResponseEntity<Object> deleteAnnounce(@RequestBody List<Integer> announceIds) {
         announceService.deleteAnnounce(announceIds);
@@ -47,7 +44,6 @@ public class AnnounceController {
     }
 
     @Log("修改网站公告")
-    @PreAuthorize("@auth.check('announce:update')")
     @RequestMapping("/update")
     public ResponseEntity<Object> updateAnnounce(@RequestBody Announce announce) {
         announceService.updateAnnonce(announce);
@@ -55,7 +51,6 @@ public class AnnounceController {
     }
 
     @Log("查询网站公告")
-    @PreAuthorize("@auth.check('announce:list')")
     @RequestMapping("/list")
     public ResponseEntity<Object> getAnnounceList(BasicQueryDto basicQueryDto, PageQueryCriteria queryCriteria) {
         PageHelper announceList = announceService.getAnnounceList(basicQueryDto, queryCriteria);

@@ -15,8 +15,6 @@ import com.sise.zhaodaola.tool.utils.PageHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
@@ -50,8 +48,9 @@ class CoreApplicationTests {
 
     @Test
     void contextLoads() {
-        ResponseEntity<String> exchange = restTemplate.exchange("http://www.nanhonghj.com:11112", HttpMethod.POST, null, String.class);
-        System.out.println(exchange);
+        String encode = passwordEncoder.encode("19971125");
+
+        System.out.println(encode);
     }
 
     @Test
@@ -98,12 +97,12 @@ class CoreApplicationTests {
 
     @Test
     void test06() {
-        String username = "1640129430";
+        String username = "1640129433";
         UserDto userDto = userService.findByUsername(username);
 
         UserUpdateDto userUpdateDto = new UserUpdateDto();
         BeanUtil.copyProperties(userDto, userUpdateDto);
-        userUpdateDto.setRoles(CollectionUtil.newHashSet(1, 2));
+        userUpdateDto.setRoles(CollectionUtil.newHashSet(1, 3));
 
         userService.updateUser(userUpdateDto);
     }

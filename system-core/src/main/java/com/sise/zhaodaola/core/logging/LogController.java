@@ -6,7 +6,6 @@ import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
 import com.sise.zhaodaola.tool.annotation.Log;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +30,6 @@ public class LogController {
         this.logService = logService;
     }
 
-    @PreAuthorize("@auth.check('log:list')")
     @PostMapping("/list/{type}")
     public ResponseEntity<Object> getLogList(@PathVariable("type") String type, BasicQueryDto basicQueryDto, PageQueryCriteria queryCriteria) {
         PageHelper pageHelper = logService.getInfoLog(basicQueryDto, queryCriteria, type);
@@ -39,7 +37,6 @@ public class LogController {
     }
 
     @Log("日志导出")
-    @PreAuthorize("@auth.check('log:download')")
     @PostMapping("/download/{type}")
     public void download(@PathVariable("type") String type, BasicQueryDto basicQueryDto, HttpServletResponse response) throws IOException {
         logService.download(logService.getAllList(basicQueryDto, type), response);

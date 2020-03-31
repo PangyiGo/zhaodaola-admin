@@ -27,7 +27,7 @@ public class RoleMenus extends Model<RoleMenus> implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    private Integer userId;
+    private Integer roleId;
 
     private Integer menuId;
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.sise.zhaodaola.business.entity.Role;
 import com.sise.zhaodaola.business.service.dto.BasicQueryDto;
 import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
+import com.sise.zhaodaola.business.service.dto.RoleMenuDto;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -60,4 +61,11 @@ public interface RoleService extends IService<Role> {
      * @return /
      */
     PageHelper getROleList(BasicQueryDto basicQueryDto, PageQueryCriteria queryCriteria);
+
+    /**
+     * 保存角色权限
+     *
+     * @param roleMenuDto /
+     */
+    void saveRoleToMenu(RoleMenuDto roleMenuDto);
 }

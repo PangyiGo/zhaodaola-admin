@@ -21,7 +21,7 @@ public interface RoleMapper extends BaseMapper<Role> {
             "\tsystem_user\n" +
             "\tUSER INNER JOIN system_user_roles user_roles ON USER.id = user_roles.user_id\n" +
             "\tINNER JOIN system_role_menus role_menus ON role_menus.role_id = user_roles.role_id\n" +
-            "\tINNER JOIN system_menu menu ON menu.id = role_menus.mune_id \n" +
+            "\tINNER JOIN system_menu menu ON menu.id = role_menus.menu_id \n" +
             "WHERE\n" +
             "\tUSER.id = #{uid}")
     Set<Menu> findByRolesToMenus(Integer uid);

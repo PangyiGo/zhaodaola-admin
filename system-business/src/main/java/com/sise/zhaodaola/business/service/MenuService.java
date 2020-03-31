@@ -2,6 +2,7 @@ package com.sise.zhaodaola.business.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sise.zhaodaola.business.entity.Menu;
+import com.sise.zhaodaola.business.service.vo.MenuQueryVo;
 import com.sise.zhaodaola.business.service.vo.MenusVo;
 
 import java.util.List;
@@ -26,4 +27,18 @@ public interface MenuService extends IService<Menu> {
      * @return /
      */
     List<MenusVo> buildMenus();
+
+    /**
+     * 获取系统所有的菜单
+     *
+     * @return /
+     */
+    List<MenuQueryVo> getAllMenus();
+
+    /**
+     * 获取用户的菜单id列表
+     *
+     * @return /
+     */
+    List<Integer> findMenuIdByRoleId(Integer roleId);
 }

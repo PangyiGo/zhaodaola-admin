@@ -7,6 +7,7 @@ import com.sise.zhaodaola.business.mapper.MenuMapper;
 import com.sise.zhaodaola.business.service.MenuService;
 import com.sise.zhaodaola.business.service.UserService;
 import com.sise.zhaodaola.business.service.dto.UserDto;
+import com.sise.zhaodaola.business.service.vo.MenuQueryVo;
 import com.sise.zhaodaola.business.service.vo.MenusVo;
 import com.sise.zhaodaola.tool.utils.SecurityUtils;
 import com.sise.zhaodaola.tool.utils.StringUtils;
@@ -46,6 +47,28 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     public List<MenusVo> buildMenus() {
         List<Menu> menuList = super.list();
         return buildMenus(0, menuList);
+    }
+
+    @Override
+    public List<MenuQueryVo> getAllMenus() {
+        List<MenuQueryVo> menuQueryVos = new ArrayList<>(0);
+        List<Menu> menuList = super.list();
+        menuList.forEach(menu -> {
+            MenuQueryVo menuQueryVo = new MenuQueryVo();
+            menuQueryVo.setId(menu.getId());
+            menuQueryVo.setTitle(menu.getTitle());
+            menuQueryVo.setParent(menu.getPid());
+            menuQueryVos.add(menuQueryVo);
+        });
+        return menuQueryVos;
+    }
+
+    @Override
+    public List<Integer> findMenuIdByRoleId(Integer roleId) {
+        List<Menu> menuList = baseMapper.findMenusByRoleId(roleId);
+        if (menuList != null && menuList.size() > 0)
+            return menuList.stream().map(Menu::getId).collect(Collectors.toList());
+        return new ArrayList<>(0);
     }
 
     private List<MenusVo> buildMenus(Integer parentId, List<Menu> menuList) {

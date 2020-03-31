@@ -8,15 +8,19 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sise.zhaodaola.business.entity.Menu;
 import com.sise.zhaodaola.business.entity.Role;
+import com.sise.zhaodaola.business.entity.RoleMenus;
 import com.sise.zhaodaola.business.mapper.RoleMapper;
+import com.sise.zhaodaola.business.service.RoleMenusService;
 import com.sise.zhaodaola.business.service.RoleService;
 import com.sise.zhaodaola.business.service.dto.BasicQueryDto;
 import com.sise.zhaodaola.business.service.dto.PageQueryCriteria;
+import com.sise.zhaodaola.business.service.dto.RoleMenuDto;
 import com.sise.zhaodaola.tool.exception.BadRequestException;
 import com.sise.zhaodaola.tool.utils.DateTimeUtils;
 import com.sise.zhaodaola.tool.utils.PageHelper;
 import com.sise.zhaodaola.tool.utils.PageUtils;
 import com.sise.zhaodaola.tool.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,6 +30,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +44,9 @@ import java.util.stream.Collectors;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 @CacheConfig(cacheNames = "role")
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
+
+    @Autowired
+    private RoleMenusService roleMenusService;
 
     @Cacheable(key = "'loadPermissionByUser'+#p0")
     @Override
@@ -85,6 +93,25 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         Page<Role> rolePage = new Page<>(queryCriteria.getPage(), queryCriteria.getSize());
         Page<Role> page = super.page(rolePage, wrapper(basicQueryDto));
         return PageUtils.toPage(page.getRecords(), page.getCurrent(), page.getSize(), page.getTotal());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void saveRoleToMenu(RoleMenuDto roleMenuDto) {
+        // 删除原有的权限
+        roleMenusService.remove(Wrappers.<RoleMenus>lambdaQuery().eq(RoleMenus::getRoleId, roleMenuDto.getRoleId()));
+
+        List<RoleMenus> roleMenusList = new ArrayList<>(0);
+        // 批量保存
+        roleMenuDto.getMenuIds().forEach(item -> {
+            RoleMenus roleMenus = new RoleMenus();
+            roleMenus.setRoleId(roleMenuDto.getRoleId());
+            roleMenus.setMenuId(item);
+            roleMenusList.add(roleMenus);
+        });
+        if (roleMenusList.size() > 0) {
+            roleMenusService.saveBatch(roleMenusList);
+        }
     }
 
     private LambdaQueryWrapper<Role> wrapper(BasicQueryDto basicQueryDto) {

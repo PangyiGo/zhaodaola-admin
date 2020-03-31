@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -43,14 +42,12 @@ public class LostController {
     }
 
     @Log("寻物启事数据导出")
-    @PreAuthorize("@auth.check('lost:download')")
     @PostMapping("/download")
     public void download(LostFoundQueryDto lostFoundQueryDto, HttpServletResponse response) throws IOException {
         lostService.download(lostService.getAll(lostFoundQueryDto), response);
     }
 
     @Log("寻物启事删除")
-    @PreAuthorize("@auth.check('lost:delete')")
     @PostMapping("/delete")
     public ResponseEntity<Object> deleteLost(@RequestBody List<Integer> lostIds) {
         lostService.deleteLost(lostIds);

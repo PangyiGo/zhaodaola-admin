@@ -10,7 +10,6 @@ import com.sise.zhaodaola.tool.utils.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +35,6 @@ public class NewsTypeController {
     }
 
     @Log("查询校园资讯分类列表")
-    @PreAuthorize("@auth.check('newsType:list')")
     @PostMapping("/list")
     public ResponseEntity<Object> getNewsTypeList(BasicQueryDto basicQueryDto, PageQueryCriteria queryCriteria) {
         PageHelper pageHelper = newsTypeService.getList(basicQueryDto, queryCriteria);
@@ -51,7 +49,6 @@ public class NewsTypeController {
     }
 
     @Log("校园资讯分类新增")
-    @PreAuthorize("@auth.check('newsType:add')")
     @PostMapping("/create")
     public ResponseEntity<Object> createNewsType(@RequestBody NewsType newsType) {
         newsTypeService.createNewsType(newsType);
@@ -59,7 +56,6 @@ public class NewsTypeController {
     }
 
     @Log("校园资讯分类修改")
-    @PreAuthorize("@auth.check('newsType:update')")
     @PostMapping("/update")
     public ResponseEntity<Object> updateNewsType(@RequestBody NewsType newsType) {
         newsTypeService.updateNewsType(newsType);
@@ -67,7 +63,6 @@ public class NewsTypeController {
     }
 
     @Log("校园资讯分类删除")
-    @PreAuthorize("@auth.check('newsType:delete')")
     @PostMapping("/delete")
     public ResponseEntity<Object> deleteNewsType(@RequestBody List<Integer> typeIds) {
         newsTypeService.deleteNewsType(typeIds);

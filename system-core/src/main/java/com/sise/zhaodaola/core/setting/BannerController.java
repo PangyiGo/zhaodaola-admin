@@ -10,7 +10,6 @@ import com.sise.zhaodaola.tool.utils.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,7 +32,6 @@ public class BannerController {
     }
 
     @Log("新增轮播图")
-    @PreAuthorize("@auth.check('banner:create')")
     @RequestMapping("/create")
     public ResponseEntity<Object> createBanner(@RequestBody Banner banner) {
         bannerService.createBanner(banner);
@@ -41,7 +39,6 @@ public class BannerController {
     }
 
     @Log("删除轮播图")
-    @PreAuthorize("@auth.check('banner:deelte')")
     @RequestMapping("/delete")
     public ResponseEntity<Object> deleteBanner(@RequestBody List<Integer> bannerIds) {
         bannerService.deleteBanner(bannerIds);
@@ -49,7 +46,6 @@ public class BannerController {
     }
 
     @Log("修改轮播图")
-    @PreAuthorize("@auth.check('banner:update')")
     @RequestMapping("/update")
     public ResponseEntity<Object> updateBanner(@RequestBody Banner banner) {
         bannerService.updateBanner(banner);
@@ -57,7 +53,6 @@ public class BannerController {
     }
 
     @Log("查询轮播图")
-    @PreAuthorize("@auth.check('banner:list')")
     @RequestMapping("/list")
     public ResponseEntity<Object> getBannerList(BasicQueryDto basicQueryDto, PageQueryCriteria queryCriteria) {
         PageHelper bannerList = bannerService.getBannerList(basicQueryDto, queryCriteria);
