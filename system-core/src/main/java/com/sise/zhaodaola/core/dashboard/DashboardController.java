@@ -97,7 +97,7 @@ public class DashboardController {
         categoryList.forEach(category -> {
             Map<String, Object> map = new HashMap<>(0);
             map.put("type", category.getName());
-            map.put("count", lostService.count());
+            map.put("count", lostService.count(Wrappers.<Lost>lambdaQuery().eq(Lost::getType, category.getId())));
             mapList.add(map);
         });
         return ResponseEntity.ok(mapList);
@@ -110,7 +110,7 @@ public class DashboardController {
         categoryList.forEach(category -> {
             Map<String, Object> map = new HashMap<>(0);
             map.put("type", category.getName());
-            map.put("count", foundService.count());
+            map.put("count", foundService.count(Wrappers.<Found>lambdaQuery().eq(Found::getType, category.getId())));
             mapList.add(map);
         });
         return ResponseEntity.ok(mapList);

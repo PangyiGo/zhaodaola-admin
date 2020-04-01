@@ -54,18 +54,18 @@ logging:
     com.baomidou.mybatisplus.samples: debug
 
 # 文件存储路径
-#file:
-#  path: E:\gitworkspace\zhaodaola-admin\assets\file\
-#  avatar: E:\gitworkspace\zhaodaola-admin\assets\avatar\
-#  # 文件大小 /M
-#  maxSize: 100
-#  avatarMaxSize: 5
 file:
-  path: /Users/pangyi/Documents/WorkProjects/zhaodaola-admin/assets/file/
-  avatar: /Users/pangyi/Documents/WorkProjects/zhaodaola-admin/assets/avatar/
+  path: E:\gitworkspace\zhaodaola-admin\assets\file\
+  avatar: E:\gitworkspace\zhaodaola-admin\assets\avatar\
   # 文件大小 /M
   maxSize: 100
   avatarMaxSize: 5
+#file:
+#  path: /Users/pangyi/Documents/WorkProjects/zhaodaola-admin/assets/file/
+#  avatar: /Users/pangyi/Documents/WorkProjects/zhaodaola-admin/assets/avatar/
+#  # 文件大小 /M
+#  maxSize: 100
+#  avatarMaxSize: 5
 
 #jwt
 jwt:
